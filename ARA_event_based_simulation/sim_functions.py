@@ -166,11 +166,11 @@ def make_full_signal(impulse_json_path, SIMULATION_DURATION_NS, SAMPLING_RATE, N
     ) 
     
     pulse = generate_pulse(pulse_voltage, pulse_time, time_step, simulation_duration_samples, amplitude_scale, start_time)
-    full_signal = digitize_signal(noise+pulse, max_signal) #noise + 
+    full_signal = digitize_signal(noise+pulse, max_signal) #noise + pulse 
     full_signal = full_signal[:simulation_duration_samples]  # Ensure the signal length matches the
     return t, full_signal
 
-def plot_4_channels_signals(time_axis, channel_signals, title="4 Channels Signals"):
+def plot_channels_signals(time_axis, channel_signals, title="8 Channels Signals"):
     """
     Plot signals from 4 channels on the same graph.
     

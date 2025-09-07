@@ -13,24 +13,25 @@ from sim_functions import *
 
 
 #parameters
-SAMPLING_RATE   =  0.472            # GHz   (0.472 GS/s)
+SAMPLING_RATE   =  3.2            # GHz  
 TIME_STEP       = 1.0 / SAMPLING_RATE   # ns
 NOISE_EQUALIZE = 5 #ADC
 MAX_SIGNAL = 4095 #ADC
-WINDOW_SIZE = 18.75*1e6 #MHz
-n_of_windows = 3
+WINDOW_SIZE = 5.88*1e6 #MHz
+n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
-SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)+1  # Number of samples in the simulation duration
-N_of_channels = 4
-THRESHOLD_V= [18,21,19,21]  # ADC counts
-N_REQ = 2  # Number of channels required for a trigger
+SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
+N_of_channels = 8
+THRESHOLD_V= [20]*N_of_channels  # ADC counts
+N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 50 
+SCAN_RATE = 5 
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(6, 12, 3),   
     np.arange(12, 21, 1),  
     np.arange(22, 38, 3)   
 ])  
+PULSE_AMPLITUDES= np.arange(10, 21,10)
 
 """
 #preparring the sample pulse
@@ -80,6 +81,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
                                     ) 
         time_axis = t + time_start  # Adjust time axis for the current run
         #finding if channels exceed the threshold
+        plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
         SNR = run_pulse_amplitude / NOISE_EQUALIZE
         triggers = find_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, coincidence_ns=COINC_NS, n_channels_required=N_REQ)
         if len(triggers) > 0:
