@@ -8,8 +8,9 @@ import time
 import random
 import json
 from pathlib import Path
-from sim_functions import make_band_limited_noise, generate_pulse, digitize_signal, make_full_signal, plot_4_channels_signals, find_triggers, sigmoid
 from scipy.optimize import curve_fit
+from sim_functions import *
+
 
 #parameters
 SAMPLING_RATE   =  0.472            # GHz   (0.472 GS/s)
@@ -24,17 +25,27 @@ N_of_channels = 4
 THRESHOLD_V= [18,21,19,21]  # ADC counts
 N_REQ = 2  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 800 
+SCAN_RATE = 50 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(6, 12, 2),   
-    np.arange(12, 21, 0.7),  
-    np.arange(22, 38, 2)   
+    np.arange(6, 12, 3),   
+    np.arange(12, 21, 1),  
+    np.arange(22, 38, 3)   
 ])  
 
+"""
 #preparring the sample pulse
-with open('/home/shamshassiki/Shams_Analyzing_scripts/Trigger_simulation_and_tests/jsons/upsampled_2filter_pulse_example.json') as f:
+jsons_folder = Path(__file__).parent / "jsons"
+pulse_json_path = jsons_folder / "upsampled_2filter_pulse_example.json"
+impulse_response_path = jsons_folder / "impulse_response_Freauency_35_240.json"
+
+with open(pulse_json_path) as f:
     pulse_data = json.load(f)
-impulse_response_path   = Path("/home/shamshassiki/Shams_Analyzing_scripts/Trigger_simulation_and_tests/jsons/impulse_response_Freauency_35_240.json")
+"""
+with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
+    pulse_data = json.load(f)
+impulse_response_path   = Path("/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json")
+
+
 
 pulse_voltage = np.array(pulse_data['avg_wave'])
 pulse_time = np.array(pulse_data['t_axis_ns'])
@@ -92,11 +103,11 @@ plt.plot(SNR_values, pass_fraction, marker='o', label='Pass Fraction vs SNR')
 plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='Sigmoid Fit')
 plt.axhline(y=0.5, color='r', linestyle='--', label='50% Pass Threshold')
 plt.axvline(x=b, color='g', linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
-plt.title('Hi-Lo Trigger Efficiency Scan TESTNOW_2')
+plt.title('Hi-Lo Trigger Efficiency Scan')
 plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig("TESTNOW_SCAN_5_800rate_0deg.png")
+plt.savefig("TESTNOW_SCAN.png")
 
 
