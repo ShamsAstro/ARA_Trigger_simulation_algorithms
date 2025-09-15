@@ -23,16 +23,16 @@ n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [400]*N_of_channels  # ADC counts
+THRESHOLD_V= [270]*N_of_channels  # ADC counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 5 
+SCAN_RATE = 400 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(6, 12, 3),   
-    np.arange(12, 21, 1),  
-    np.arange(22, 38, 3)   
+    np.arange(6, 12, 0.5),   
+    np.arange(12, 22, 0.5),  
+    np.arange(22, 28, 0.5)   
 ])  
-PULSE_AMPLITUDES= np.arange(10, 21,10)
+#PULSE_AMPLITUDES= np.arange(10, 21,10)
 
 """
 #preparring the sample pulse
@@ -59,6 +59,12 @@ pulse_time = pulse_time - pulse_time[0]  # Start from 0 ns
 
 pass_fraction = []  # Example fraction of runs where a pulse is present
 SNR_values = []  # Example SNR values for each run
+tot_SNR_values = []  # Example SNR values for each run
+TOT_values = []  # Example TOT values for each run
+
+#starting benchmarking
+#benchmarking over the loop
+time0 = time.time()
 
 for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
     channel_signals= [[] for _ in range(N_of_channels)]
@@ -82,14 +88,20 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
                                     ) 
         time_axis = t + time_start  # Adjust time axis for the current run
         #finding if channels exceed the threshold
-        plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
+        #plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
         SNR = run_pulse_amplitude / NOISE_EQUALIZE
-        triggers = find_ARA_env_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, coincidence_ns=COINC_NS, n_channels_required=N_REQ)
+        triggers = find_ARA_env_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
         if len(triggers) > 0:
             COINC += 1
+            TOT, n_triggered_channels = TOT_finder(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
+            TOT_values.append(TOT)
+            tot_SNR_values.append(SNR)
     pass_fraction.append(COINC / SCAN_RATE)
     SNR_values.append(SNR)
     print(f"\r Progress: {run+1}/{len(PULSE_AMPLITUDES)} completed", end='')
+
+time1 = time.time()
+print(f"\nTotal benchmarking time: {time1 - time0:.2f} seconds")
 
 
 
@@ -106,7 +118,7 @@ plt.plot(SNR_values, pass_fraction, marker='o', label='Pass Fraction vs SNR')
 plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='Sigmoid Fit')
 plt.axhline(y=0.5, color='r', linestyle='--', label='50% Pass Threshold')
 plt.axvline(x=b, color='g', linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
-plt.title('Hi-Lo Trigger Efficiency Scan')
+plt.title('ARA Trigger Efficiency Scan')
 plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
@@ -114,3 +126,11 @@ plt.legend()
 plt.savefig("TESTNOW_SCAN.png")
 
 
+# Plot TOT vs SNR
+plt.figure(figsize=(10, 6))
+plt.scatter(tot_SNR_values, TOT_values, alpha=0.7)  
+plt.title('Time Over Threshold (TOT) vs SNR for Triggered Events')
+plt.xlabel('SNR')
+plt.ylabel('Time Over Threshold (ns)')
+plt.grid()
+plt.savefig("TESTNOW_TOT_vs_SNR.png")

@@ -32,7 +32,7 @@ PULSE_AMPLITUDES = np.concatenate([
     np.arange(22, 38, 3)   
 ])  
 
-"""
+
 #preparring the sample pulse
 jsons_folder = Path(__file__).parent / "jsons"
 pulse_json_path = jsons_folder / "upsampled_2filter_pulse_example.json"
@@ -45,7 +45,7 @@ with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorith
     pulse_data = json.load(f)
 impulse_response_path   = Path("/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json")
 
-
+"""
 
 pulse_voltage = np.array(pulse_data['avg_wave'])
 pulse_time = np.array(pulse_data['t_axis_ns'])
