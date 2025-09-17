@@ -16,23 +16,23 @@ from trig_functions import *
 #parameters
 SAMPLING_RATE   =  3.2            # GHz  
 TIME_STEP       = 1.0 / SAMPLING_RATE   # ns
-NOISE_EQUALIZE = 5 #ADC
+NOISE_EQUALIZE = 100 #ADC
 MAX_SIGNAL = 4095 #ADC
 WINDOW_SIZE = 5.88*1e6 #MHz
 n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [270]*N_of_channels  # ADC counts
+THRESHOLD_V= [85000]*N_of_channels  # ADC^2 counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 400 
+SCAN_RATE = 100 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(6, 12, 0.5),   
+    np.arange(100, 400, 10),   
     np.arange(12, 22, 0.5),  
     np.arange(22, 28, 0.5)   
 ])  
-#PULSE_AMPLITUDES= np.arange(10, 21,10)
+PULSE_AMPLITUDES= np.arange(100, 400,10)
 
 """
 #preparring the sample pulse
@@ -123,7 +123,7 @@ plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig("TESTNOW_SCAN.png")
+plt.savefig("new_noise_parameters.png")
 
 
 # Plot TOT vs SNR
@@ -133,4 +133,4 @@ plt.title('Time Over Threshold (TOT) vs SNR for Triggered Events')
 plt.xlabel('SNR')
 plt.ylabel('Time Over Threshold (ns)')
 plt.grid()
-plt.savefig("TESTNOW_TOT_vs_SNR.png")
+plt.savefig("TOT_new_noise_parameters.png")
