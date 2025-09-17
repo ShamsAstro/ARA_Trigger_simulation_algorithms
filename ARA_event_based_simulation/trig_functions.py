@@ -79,37 +79,31 @@ def envelope_with_edge_rules(x: np.ndarray, window_points: int = 10) -> np.ndarr
     return y
 
 
+
+
 def find_ARA_env_triggers(
     channel_signals,
     time_axis,
     *,
     threshold,
     n_channels_required=3,
-    envelope_window_points=10,   # fixed to 10 per your spec; kept for clarity
-    min_separation_ns=0.0        # optional: ignore triggers closer than this
+    envelope_window_points=10,   # kept for interface; envelope helper is fixed to 10
+    min_separation_ns=0.0        # ignored in event-wide mode (one trigger max)
 ):
     """
-    Envelope-based coincidence trigger:
-
-    Steps per channel:
-      1) square the signal (power)
-      2) apply 'envelope' = rolling average with 10-point center window
-         and special edge handling:
-           - first 5 samples: mean of next 5 points
-           - last 5 samples: mean of previous 5 points
-      3) compare envelope to per-channel threshold
-
-    A trigger occurs at the earliest sample index where the number of
-    channels above threshold >= n_channels_required. We report one event
-    per 'rising edge' of that condition and (optionally) enforce a
-    minimum separation between reported triggers.
+    EVENT-WIDE envelope trigger (no simultaneity requirement):
+    - Square each channel, apply the same 10-point edge-handled envelope.
+    - A channel 'fires' if its envelope exceeds its threshold at ANY time in the event.
+    - If >= n_channels_required channels fire anywhere in the event, we report ONE trigger:
+        * t_trigger = earliest threshold-crossing time among all fired channels
+        * channels  = list of all channels that fired anywhere in the event
 
     Returns
     -------
-    triggers : list[dict]
-       Each: {"t_trigger": float, "channels": list[int]}
-       'channels' lists the channels above threshold at that sample.
+    triggers : list[dict]  (length 0 or 1)
+        Each: {"t_trigger": float, "channels": list[int]}
     """
+
     # --- inputs to arrays ---
     t = np.asarray(time_axis, dtype=float)
     X = [np.asarray(sig, dtype=float) for sig in channel_signals]
@@ -126,45 +120,35 @@ def find_ARA_env_triggers(
     if thr.size != n_ch:
         raise ValueError("threshold must be scalar or length == n_channels.")
 
-    # --- 1) power and 2) envelope (vectorized across channels) ---
-    # Build 2D array (n_ch, N)
+    # --- power + envelope (fixed 10-point, edge rules) ---
     P = np.empty((n_ch, N), dtype=float)
     for ch in range(n_ch):
-        # square
         p = X[ch] * X[ch]
-        # envelope with custom 10-point rule
-        P[ch] = envelope_with_edge_rules(p)
+        P[ch] = envelope_with_edge_rules(p)  # same helper used in your path
 
-    # --- 3) thresholding per channel ---
-    # Boolean mask: shape (n_ch, N)
-    above = P >= thr[:, None]
+    # --- channel 'fires' if it ever exceeds its own threshold in the event ---
+    above = P >= thr[:, None]              # (n_ch, N) bool
+    channel_hit = np.any(above, axis=1)    # (n_ch,) bool
 
-    # Count how many channels are above at each time sample
-    count = np.sum(above, axis=0)  # shape (N,)
-
-    # Find “rising edges” where count crosses from <n_req to >=n_req
-    cond = count >= int(n_channels_required)
-    if not np.any(cond):
+    fired_channels = np.flatnonzero(channel_hit)
+    if fired_channels.size < int(n_channels_required):
         return []
 
-    rising = np.flatnonzero(cond & ~np.r_[False, cond[:-1]])
+    # earliest crossing time among ALL fired channels
+    first_idxs = []
+    for ch in fired_channels:
+        idxs = np.flatnonzero(above[ch])
+        if idxs.size:
+            first_idxs.append(idxs[0])
+    if not first_idxs:
+        return []
 
-    # Optionally enforce a minimum time separation between triggers
-    if rising.size and min_separation_ns > 0.0:
-        kept = [rising[0]]
-        last_t = t[rising[0]]
-        for idx in rising[1:]:
-            if (t[idx] - last_t) >= min_separation_ns:
-                kept.append(idx)
-                last_t = t[idx]
-        rising = np.asarray(kept, dtype=int)
+    r0 = int(min(first_idxs))
+    return [{
+        "t_trigger": float(t[r0]),
+        "channels": fired_channels.tolist()
+    }]
 
-    # Build outputs; for each trigger index, list which channels are above
-    triggers = []
-    for idx in rising:
-        chans = np.flatnonzero(above[:, idx]).tolist()
-        triggers.append({"t_trigger": float(t[idx]), "channels": chans})
-    return triggers
 
 
 def TOT_finder(
@@ -172,32 +156,33 @@ def TOT_finder(
     time_axis,
     *,
     threshold,
-    n_channels_required=2
+    n_channels_required=2  # kept for API compatibility; not used here
 ):
     """
-    Time-Over-Threshold (TOT) for the FIRST coincidence event using the same
-    envelope as your trigger path (_envelope_10_with_edge_rules).
+    Event-wide per-channel TOT (samples), averaged over triggered channels.
 
-    Inputs (same style as your trigger):
-      channel_signals : list/array of shape (n_ch, N)
-      time_axis       : 1D array of length N
-      threshold       : scalar OR array-like length n_ch (POWER thresholds)
-      n_channels_required : int
+    Steps:
+      - Square each channel and apply the same 10-point envelope with edge rules.
+      - For each channel, compute the longest consecutive run of samples where
+        envelope >= that channel's threshold.
+      - Consider only channels with a nonzero run (i.e., that ever crossed).
+      - Return (average of per-channel maxima in samples, number of triggered channels).
 
     Returns
     -------
-    TOT_samples : int
-        Number of consecutive samples, starting at the first trigger sample,
-        for which the coincidence condition remains true.
+    TOT_avg_samples : float
+        Average of the per-channel longest runs (in samples) over channels that fired.
+        0.0 if no channel crossed threshold.
     channels_triggered : int
-        Number of channels above threshold at that trigger sample.
+        Number of channels that had at least one sample above threshold.
     """
+
     # ---- validate shapes ----
     t = np.asarray(time_axis, dtype=float)
     X = [np.asarray(sig, dtype=float) for sig in channel_signals]
     n_ch = len(X)
     if n_ch == 0:
-        return 0, 0
+        return 0.0, 0
     N = X[0].size
     if any(x.size != N for x in X) or t.size != N:
         raise ValueError("All channels and time_axis must have the same length.")
@@ -208,36 +193,37 @@ def TOT_finder(
     if thr.size != n_ch:
         raise ValueError("threshold must be scalar or length == n_channels.")
 
-    # ---- square → envelope (using the SAME helper) ----
-    # NOTE: thresholds must be in POWER units (since we square).
+    # ---- square → envelope (same helper as trigger path) ----
     P = np.empty((n_ch, N), dtype=float)
     for ch in range(n_ch):
-        p = X[ch] * X[ch]  # power
+        p = X[ch] * X[ch]                 # power
         P[ch] = envelope_with_edge_rules(p)
 
-    # ---- threshold per channel → coincidence condition ----
-    above = P >= thr[:, None]       # (n_ch, N) bool
-    count = np.sum(above, axis=0)   # (N,)
-    cond  = count >= int(n_channels_required)
+    # ---- per-channel longest run of True in (envelope >= threshold) ----
+    def longest_true_run(mask: np.ndarray) -> int:
+        """Length (in samples) of the longest consecutive True run in a 1D bool mask."""
+        if not np.any(mask):
+            return 0
+        m = mask.astype(np.int8)
+        d = np.diff(np.r_[0, m, 0])
+        starts = np.flatnonzero(d == 1)
+        ends   = np.flatnonzero(d == -1)
+        return int(np.max(ends - starts))  # samples
 
-    if not np.any(cond):
-        return 0, 0
+    runs = np.empty(n_ch, dtype=int)
+    for ch in range(n_ch):
+        above = P[ch] >= thr[ch]
+        runs[ch] = longest_true_run(above)
 
-    # first rising edge of coincidence
-    rising = np.flatnonzero(cond & ~np.r_[False, cond[:-1]])
-    if rising.size == 0:
-        return 0, 0
-    r0 = int(rising[0])
+    # ---- average over channels that actually crossed ----
+    triggered_mask = runs > 0
+    channels_triggered = int(np.sum(triggered_mask))
+    if channels_triggered == 0:
+        return 0.0, 0
 
-    # channels above at trigger sample
-    channels_triggered = int(np.sum(above[:, r0]))
+    TOT_avg_samples = float(np.mean(runs[triggered_mask]))
+    return TOT_avg_samples, channels_triggered
 
-    # TOT: consecutive True samples from r0 onward
-    seg = cond[r0:]
-    end_false = np.flatnonzero(~seg)
-    TOT_samples = int(end_false[0]) if end_false.size else int(seg.size)
-
-    return TOT_samples, channels_triggered
 
 def fit_sigmoid_get_b(snr, passfrac):
     params, _ = curve_fit(sigmoid, snr, passfrac, p0=[1, np.mean(snr)])

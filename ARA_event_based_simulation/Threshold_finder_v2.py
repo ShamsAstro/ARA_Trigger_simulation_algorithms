@@ -25,7 +25,7 @@ SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9  # ns
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
-SCAN_TIME_LIMIT_SEC       = 3600         #3600     # one hour
+SCAN_TIME_LIMIT_SEC       = 120         #3600     # one hour
 START_THRESHOLD           = 3000     # in POWER units (ADC^2), by your spec
 THRESHOLD_STEP            = 1000     # increment per completed threshold
 TRIGGERS_PER_THRESHOLD    = 15       # stop each threshold at 15 triggers
@@ -37,7 +37,7 @@ impulse_response_path = Path(
 )
 
 # Output file
-OUT_JSON = Path("threshold_scan_rates_1h.json")
+OUT_JSON = Path("threshold_scan_rates_120sec.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally

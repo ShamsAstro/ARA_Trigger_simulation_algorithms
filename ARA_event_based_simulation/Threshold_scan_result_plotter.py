@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Input file
-IN_JSON = Path("threshold_scan_rates_1h.json")
+IN_JSON = Path("threshold_scan_rates_120sec.json")
 
 def main():
     # Load results
@@ -20,7 +20,7 @@ def main():
     plt.figure(figsize=(8,6))
     plt.plot(thresholds, np.log(trigger_rates), marker="o", linestyle="-", label="Trigger rate")
     plt.xlabel("Threshold (ADC²)")
-    plt.ylabel("Trigger rate (triggers / events)")
+    plt.ylabel("Trigger rate (triggers / events) log scale")
     plt.title("Trigger Rate vs Threshold (pure noise)")
     plt.grid(True)
     plt.legend()
