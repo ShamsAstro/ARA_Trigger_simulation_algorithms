@@ -45,8 +45,7 @@ with open(pulse_json_path) as f:
 """
 with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
     pulse_data = json.load(f)
-impulse_response_path   = Path("/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json")
-
+impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 
 pulse_voltage = np.array(pulse_data['avg_wave'])

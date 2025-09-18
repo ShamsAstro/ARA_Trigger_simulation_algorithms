@@ -80,7 +80,6 @@ def envelope_with_edge_rules(x: np.ndarray, window_points: int = 10) -> np.ndarr
 
 
 
-
 def find_ARA_env_triggers(
     channel_signals,
     time_axis,

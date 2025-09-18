@@ -43,10 +43,11 @@ impulse_response_path = jsons_folder / "impulse_response_Freauency_35_240.json"
 with open(pulse_json_path) as f:
     pulse_data = json.load(f)
 """
-with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
+pulse_json_path = Path("../RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json").resolve()
+with open(pulse_json_path) as f:
     pulse_data = json.load(f)
-impulse_response_path   = Path("/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json")
-
+    
+impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 
 pulse_voltage = np.array(pulse_data['avg_wave'])
@@ -85,7 +86,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
         #finding if channels exceed the threshold
         plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
         SNR = run_pulse_amplitude / NOISE_EQUALIZE
-        triggers = find_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, coincidence_ns=COINC_NS, n_channels_required=N_REQ)
+        triggers = find_ARA_env_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
         if len(triggers) > 0:
             COINC += 1
     pass_fraction.append(COINC / SCAN_RATE)
@@ -112,6 +113,6 @@ plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig("TESTNOW_SCAN.png")
+plt.savefig("TESTNOW_SCAN_delete.png")
 
 
