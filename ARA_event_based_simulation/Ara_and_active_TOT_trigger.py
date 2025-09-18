@@ -23,16 +23,16 @@ n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [97000]*N_of_channels  # ADC counts
+THRESHOLD_V= [97000]*N_of_channels  # ADC^2 counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 100 
+SCAN_RATE = 300 
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(120, 200, 15),   
     np.arange(200, 400, 10),  
     np.arange(400, 600, 25)   
 ])  
-PULSE_AMPLITUDES= np.arange(100, 600,40)
+#PULSE_AMPLITUDES= np.arange(100, 600,10)
 
 """
 #preparring the sample pulse
@@ -43,10 +43,8 @@ impulse_response_path = jsons_folder / "impulse_response_Freauency_35_240.json"
 with open(pulse_json_path) as f:
     pulse_data = json.load(f)
 """
-pulse_json_path = Path("../RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json").resolve()
-with open(pulse_json_path) as f:
+with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
     pulse_data = json.load(f)
-    
 impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 
@@ -60,6 +58,12 @@ pulse_time = pulse_time - pulse_time[0]  # Start from 0 ns
 
 pass_fraction = []  # Example fraction of runs where a pulse is present
 SNR_values = []  # Example SNR values for each run
+tot_SNR_values = []  # Example SNR values for each run
+TOT_values = []  # Example TOT values for each run
+
+#starting benchmarking
+#benchmarking over the loop
+time0 = time.time()
 
 for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
     channel_signals= [[] for _ in range(N_of_channels)]
@@ -81,7 +85,6 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
                                     max_signal=MAX_SIGNAL, 
                                     start_time=start_seed
                                     ) 
-            
         time_axis = t + time_start  # Adjust time axis for the current run
         #finding if channels exceed the threshold
         #plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
@@ -89,9 +92,16 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
         triggers = find_ARA_env_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
         if len(triggers) > 0:
             COINC += 1
+            TOT, n_triggered_channels = TOT_finder(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
+            if TOT > 5:  # Only consider events with TOT greater than 5 nsamples
+                TOT_values.append(TOT)
+                tot_SNR_values.append(SNR)
     pass_fraction.append(COINC / SCAN_RATE)
     SNR_values.append(SNR)
     print(f"\r Progress: {run+1}/{len(PULSE_AMPLITUDES)} completed", end='')
+
+time1 = time.time()
+print(f"\nTotal benchmarking time: {time1 - time0:.2f} seconds")
 
 
 
@@ -101,18 +111,30 @@ a, b = params
 # Generate sigmoid values for plotting
 pass_fraction_sigmoid = sigmoid(np.array(SNR_values), a, b)
 
-
+"""
 # Plotting the results
 plt.figure(figsize=(10, 6))
 plt.plot(SNR_values, pass_fraction, marker='o', label='Pass Fraction vs SNR')
 plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='Sigmoid Fit')
 plt.axhline(y=0.5, color='r', linestyle='--', label='50% Pass Threshold')
 plt.axvline(x=b, color='g', linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
-plt.title('ARA Trigger Efficiency Scan at 5Hz target threshold')
+plt.title('Trigger_efficiency_scan_at_5Hz_target_threshold')
 plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
 plt.savefig("Trigger_efficiency_scan_at_5Hz_target_threshold.png")
+
+"""
+
+# Plot TOT vs SNR
+plt.figure(figsize=(10, 6))
+plt.scatter(tot_SNR_values, TOT_values, alpha=0.7)  
+plt.title('Time Over Threshold (TOT) vs SNR for Triggered Events_ 5Hz target threshold_eliminate_tot5.png')
+plt.xlabel('SNR')
+plt.ylabel('Time Over Threshold (ns)')
+plt.grid()
+plt.savefig("TOT_scan_at_5Hz_target_threshold_eliminate_tot5.png")
+
 
 
