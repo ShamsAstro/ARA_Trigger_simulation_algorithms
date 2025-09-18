@@ -18,26 +18,24 @@ from trig_functions import *
 SAMPLING_RATE_GHZ         = 3.2      # GHz
 TIME_STEP_NS              = 1.0 / SAMPLING_RATE_GHZ
 NOISE_RMS_ADC             = 100      # ADC (amplitude rms for noise generator)
-MAX_SIGNAL_ADC            = 4095     # if you digitize later (not used here)
+MAX_SIGNAL_ADC            = 4095     
 WINDOW_SIZE_MHZ           = 5.88e6   # MHz (your prior definition)
 N_WINDOWS                 = 1
 SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9  # ns
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
-SCAN_TIME_LIMIT_SEC       = 120         #3600     # one hour
+SCAN_TIME_LIMIT_SEC       = 20         #3600     # one hour
 START_THRESHOLD           = 3000     # in POWER units (ADC^2), by your spec
-THRESHOLD_STEP            = 1000     # increment per completed threshold
-TRIGGERS_PER_THRESHOLD    = 15       # stop each threshold at 15 triggers
+THRESHOLD_STEP            = 2500     # increment per completed threshold
+TRIGGERS_PER_THRESHOLD    = 20       # stop each threshold at n triggers
 
 # Impulse-response JSON path (adjust if needed)
 # If you implemented caching in sim_functions, it will be used automatically.
-impulse_response_path = Path(
-    "/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json"
-)
+impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_scan_rates_120sec.json")
+OUT_JSON = Path("threshold_scan_rates_delete.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
@@ -89,12 +87,13 @@ def main():
                 # Generate one pure-noise event across all channels
                 channel_signals = []
                 for ch in range(N_CHANNELS):
-                    t_axis, noise = make_band_limited_noise(
+                    t_axis, noise = make_band_limited_noise_digitized(
                         json_path=impulse_response_path,
                         channel_key="ch2_2x_amp",
                         window_ns=SIM_DURATION_NS,
                         adc_rate_ghz=SAMPLING_RATE_GHZ,
-                        target_rms_mV=NOISE_RMS_ADC,   # amplitude RMS
+                        target_rms_mV=NOISE_RMS_ADC, 
+                        max_signal=MAX_SIGNAL_ADC,
                     )
                     channel_signals.append(noise)
 

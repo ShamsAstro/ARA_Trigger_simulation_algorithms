@@ -95,6 +95,72 @@ def make_band_limited_noise(json_path,
     time_ns = np.arange(N) * dt_ns
     return time_ns, noise_mV
 
+def make_band_limited_noise_digitized(json_path,
+                            channel_key="ch0",
+                            window_ns=1000.0,  # length of the output trace in ns
+                            adc_rate_ghz=0.472,   # hardware sampling rate
+                            oversample=1,         # use >1 for fractional-ns step
+                            target_rms_mV=1.0,
+                            max_signal=4095,
+                            rng=None):
+    """
+    Return (time_ns, noise_mV) for one random noise realisation whose
+    spectrum follows the magnitude in `json_path[channel_key]`.
+
+    Parameters
+    ----------
+    json_path : str | Path
+        Path to impulse-response JSON containing keys 'freq_GHz' + channels.
+    channel_key : str
+        Which channel’s magnitude to use as the band-pass shape.
+    window_ns : float
+        Length of the output trace in nanoseconds.
+    adc_rate_ghz : float
+        Native ADC rate of the system (GHz).
+    oversample : int
+        Upsampling factor applied before the FFT (Δt = 1/(adc_rate*oversample)).
+    target_rms_mV : float
+        RMS of the returned waveform, in millivolts.
+    rng : numpy.random.Generator | None
+        Source of randomness (defaults to np.random.default_rng()).
+
+    Returns
+    -------
+    time_ns : 1-D ndarray
+        Time axis in nanoseconds.
+    noise_mV : 1-D ndarray
+        Band-limited noise in millivolts, rms ≈ `target_rms_mV`.
+    """
+    # ---------- load magnitude response ------------
+    freq_ref, mag_ref = get_impulse_arrays(json_path, channel_key)
+
+    # ---------- define FFT grid --------------------
+    dt_ns  = 1.0 / (adc_rate_ghz * oversample)       # ns
+    N      = int(round(window_ns / dt_ns))
+    dt_s   = dt_ns * 1e-9
+    freq_Hz = np.fft.rfftfreq(N, d=dt_s)
+    freq_GHz = freq_Hz / 1e9
+
+    # ---------- interpolate → Rayleigh σ -----------
+    sigma = np.interp(freq_GHz, freq_ref, mag_ref, left=0.0, right=0.0)
+
+    # ---------- draw random spectrum ---------------
+    rng = rng or np.random.default_rng()
+    amp   = rng.rayleigh(scale=sigma)
+    phase = rng.uniform(0, 2*np.pi, size=amp.size)
+    spec  = amp * np.exp(1j * phase)
+
+    # ---------- IFFT to time domain ----------------
+    noise = np.fft.irfft(spec, n=N)
+
+    # ---------- normalise RMS ----------------------
+    rms = np.sqrt(np.mean(noise ** 2)) or 1.0
+    noise_mV = noise / rms * target_rms_mV
+
+    time_ns = np.arange(N) * dt_ns
+    noise_mV = np.clip(noise_mV, -max_signal//2, max_signal//2)
+    return time_ns, noise_mV
+
 
 def generate_pulse (pulse_v, pulse_t , STEP, simulation_index_duration, amplitude_scale, start_time):
 

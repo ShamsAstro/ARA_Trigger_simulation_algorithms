@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Input file
-IN_JSON = Path("threshold_scan_rates_120sec.json")
+IN_JSON = Path("threshold_scan_rates_large.json")
 
 def main():
     # Load results
@@ -25,7 +25,7 @@ def main():
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
-    plt.savefig("trigger_rate_vs_threshold_1h_log.png")
+    plt.savefig("trigger_rate_vs_threshold_log_large.png")
 
 
     # --- 2) TOT vs threshold ---
@@ -40,7 +40,7 @@ def main():
     plt.title("Time Over Threshold vs Threshold")
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig("tot_vs_threshold_1h.png")
+    plt.savefig("tot_vs_threshold_large.png")
 
 
 if __name__ == "__main__":
