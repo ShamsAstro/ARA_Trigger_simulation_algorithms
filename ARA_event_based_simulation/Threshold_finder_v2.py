@@ -25,17 +25,17 @@ SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9  # ns
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
-SCAN_TIME_LIMIT_SEC       = 20         #3600     # one hour
-START_THRESHOLD           = 3000     # in POWER units (ADC^2), by your spec
-THRESHOLD_STEP            = 2500     # increment per completed threshold
-TRIGGERS_PER_THRESHOLD    = 20       # stop each threshold at n triggers
+SCAN_TIME_LIMIT_SEC       = 3600*9         #3600     # one hour
+START_THRESHOLD           = 97000     # in POWER units (ADC^2), by your spec
+THRESHOLD_STEP            = 1000     # increment per completed threshold
+TRIGGERS_PER_THRESHOLD    = 15       # stop each threshold at n triggers
 
 # Impulse-response JSON path (adjust if needed)
 # If you implemented caching in sim_functions, it will be used automatically.
 impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_scan_rates_delete.json")
+OUT_JSON = Path("threshold_scan_rates_at_97000_overnight.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
