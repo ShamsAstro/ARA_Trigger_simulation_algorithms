@@ -10,12 +10,15 @@ IN_JSON_B = Path("threshold_scan_rates_Eliminate_low_tot.json")
 labelA = "PURE noise"
 labelB = "PURE noise, TOT>=4"
 
+X_axis_start = 30000  # for zooming in the plot
+Y_axis_end = 10**10  # for zooming in the plot
+
 EVENT_NS = 170.0            # event duration in ns (≈ 1 / 5.88 MHz)
 TARGET_HZ = 5.0             # target trigger rate
 
 # You can use the same fit-start threshold for both, or set distinct ones:
-FIT_START_THRESHOLD_A = 55000
-FIT_START_THRESHOLD_B = 55000
+FIT_START_THRESHOLD_A = 60000
+FIT_START_THRESHOLD_B = 60000
 
 OUT_PNG = Path("trigger_rate_hz_vs_threshold_fit_compare.png")
 # ------------------------------------------
@@ -134,8 +137,10 @@ def main():
     plt.ylabel("Trigger rate (Hz, log scale)")
     plt.title("Trigger Rate vs Threshold — Two Datasets (pure noise)")
     plt.grid(True, which="both", alpha=0.3)
-    plt.legend()
+    plt.legend(loc='upper right') #, bbox_to_anchor=(1, 1)
     plt.tight_layout()
+    plt.xlim(left=X_axis_start)  # zoom in
+    plt.ylim(top=Y_axis_end)  # zoom in
     plt.savefig(OUT_PNG)
 
     # ---------- Console summary ----------
