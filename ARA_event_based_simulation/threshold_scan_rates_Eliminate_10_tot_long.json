@@ -1,0 +1,524 @@
+[
+  {
+    "threshold": 2000,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      159,
+      134,
+      124,
+      142,
+      102,
+      118,
+      144,
+      121,
+      122,
+      138
+    ]
+  },
+  {
+    "threshold": 4500,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      71,
+      86,
+      68,
+      63,
+      79,
+      77,
+      71,
+      59,
+      64,
+      81
+    ]
+  },
+  {
+    "threshold": 7000,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      43,
+      55,
+      53,
+      49,
+      48,
+      64,
+      56,
+      56,
+      52,
+      53
+    ]
+  },
+  {
+    "threshold": 9500,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      45,
+      48,
+      51,
+      40,
+      50,
+      49,
+      38,
+      41,
+      47,
+      48
+    ]
+  },
+  {
+    "threshold": 12000,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      41,
+      35,
+      33,
+      35,
+      37,
+      31,
+      32,
+      34,
+      43,
+      33
+    ]
+  },
+  {
+    "threshold": 14500,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      33,
+      35,
+      33,
+      32,
+      31,
+      26,
+      35,
+      32,
+      30,
+      32
+    ]
+  },
+  {
+    "threshold": 17000,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      22,
+      26,
+      23,
+      33,
+      27,
+      28,
+      23,
+      30,
+      26,
+      27
+    ]
+  },
+  {
+    "threshold": 19500,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      26,
+      22,
+      22,
+      22,
+      22,
+      25,
+      25,
+      29,
+      25,
+      28
+    ]
+  },
+  {
+    "threshold": 22000,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      24,
+      21,
+      20,
+      21,
+      20,
+      22,
+      21,
+      23,
+      22,
+      22
+    ]
+  },
+  {
+    "threshold": 24500,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      20,
+      21,
+      18,
+      19,
+      20,
+      19,
+      19,
+      17,
+      19,
+      15
+    ]
+  },
+  {
+    "threshold": 27000,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      14,
+      16,
+      17,
+      16,
+      15,
+      17,
+      16,
+      13,
+      18,
+      14
+    ]
+  },
+  {
+    "threshold": 29500,
+    "num_triggers": 10,
+    "num_events_scanned": 10,
+    "trigger_rate": 1.0,
+    "tot_samples": [
+      13,
+      13,
+      12,
+      16,
+      15,
+      15,
+      12,
+      15,
+      12,
+      16
+    ]
+  },
+  {
+    "threshold": 32000,
+    "num_triggers": 10,
+    "num_events_scanned": 11,
+    "trigger_rate": 0.9090909090909091,
+    "tot_samples": [
+      13,
+      13,
+      13,
+      13,
+      10,
+      12,
+      14,
+      13,
+      15,
+      13
+    ]
+  },
+  {
+    "threshold": 34500,
+    "num_triggers": 10,
+    "num_events_scanned": 11,
+    "trigger_rate": 0.9090909090909091,
+    "tot_samples": [
+      13,
+      10,
+      12,
+      12,
+      11,
+      10,
+      12,
+      10,
+      11,
+      12
+    ]
+  },
+  {
+    "threshold": 37000,
+    "num_triggers": 10,
+    "num_events_scanned": 21,
+    "trigger_rate": 0.47619047619047616,
+    "tot_samples": [
+      12,
+      10,
+      13,
+      11,
+      11,
+      11,
+      10,
+      12,
+      12,
+      11
+    ]
+  },
+  {
+    "threshold": 39500,
+    "num_triggers": 10,
+    "num_events_scanned": 28,
+    "trigger_rate": 0.35714285714285715,
+    "tot_samples": [
+      11,
+      10,
+      13,
+      11,
+      12,
+      12,
+      12,
+      12,
+      13,
+      15
+    ]
+  },
+  {
+    "threshold": 42000,
+    "num_triggers": 10,
+    "num_events_scanned": 42,
+    "trigger_rate": 0.23809523809523808,
+    "tot_samples": [
+      12,
+      15,
+      11,
+      10,
+      11,
+      10,
+      10,
+      11,
+      16,
+      12
+    ]
+  },
+  {
+    "threshold": 44500,
+    "num_triggers": 10,
+    "num_events_scanned": 50,
+    "trigger_rate": 0.2,
+    "tot_samples": [
+      13,
+      10,
+      11,
+      12,
+      12,
+      15,
+      11,
+      10,
+      10,
+      10
+    ]
+  },
+  {
+    "threshold": 47000,
+    "num_triggers": 10,
+    "num_events_scanned": 133,
+    "trigger_rate": 0.07518796992481203,
+    "tot_samples": [
+      10,
+      11,
+      11,
+      14,
+      10,
+      13,
+      12,
+      13,
+      10,
+      11
+    ]
+  },
+  {
+    "threshold": 49500,
+    "num_triggers": 10,
+    "num_events_scanned": 147,
+    "trigger_rate": 0.06802721088435375,
+    "tot_samples": [
+      13,
+      10,
+      13,
+      11,
+      11,
+      11,
+      10,
+      12,
+      15,
+      11
+    ]
+  },
+  {
+    "threshold": 52000,
+    "num_triggers": 10,
+    "num_events_scanned": 223,
+    "trigger_rate": 0.04484304932735426,
+    "tot_samples": [
+      10,
+      10,
+      10,
+      11,
+      10,
+      11,
+      11,
+      15,
+      10,
+      11
+    ]
+  },
+  {
+    "threshold": 54500,
+    "num_triggers": 10,
+    "num_events_scanned": 509,
+    "trigger_rate": 0.019646365422396856,
+    "tot_samples": [
+      11,
+      12,
+      11,
+      10,
+      10,
+      13,
+      10,
+      10,
+      14,
+      10
+    ]
+  },
+  {
+    "threshold": 57000,
+    "num_triggers": 10,
+    "num_events_scanned": 1490,
+    "trigger_rate": 0.006711409395973154,
+    "tot_samples": [
+      10,
+      11,
+      13,
+      12,
+      10,
+      10,
+      13,
+      11,
+      11,
+      11
+    ]
+  },
+  {
+    "threshold": 59500,
+    "num_triggers": 10,
+    "num_events_scanned": 3337,
+    "trigger_rate": 0.0029967036260113876,
+    "tot_samples": [
+      10,
+      12,
+      15,
+      11,
+      11,
+      10,
+      10,
+      10,
+      11,
+      10
+    ]
+  },
+  {
+    "threshold": 62000,
+    "num_triggers": 10,
+    "num_events_scanned": 8994,
+    "trigger_rate": 0.0011118523460084502,
+    "tot_samples": [
+      12,
+      12,
+      10,
+      11,
+      12,
+      11,
+      14,
+      11,
+      10,
+      12
+    ]
+  },
+  {
+    "threshold": 64500,
+    "num_triggers": 10,
+    "num_events_scanned": 38009,
+    "trigger_rate": 0.0002630955826251677,
+    "tot_samples": [
+      12,
+      10,
+      10,
+      10,
+      12,
+      11,
+      11,
+      10,
+      12,
+      13
+    ]
+  },
+  {
+    "threshold": 67000,
+    "num_triggers": 10,
+    "num_events_scanned": 99844,
+    "trigger_rate": 0.00010015624374023476,
+    "tot_samples": [
+      10,
+      11,
+      11,
+      11,
+      12,
+      12,
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  {
+    "threshold": 69500,
+    "num_triggers": 10,
+    "num_events_scanned": 253231,
+    "trigger_rate": 3.9489635945046224e-05,
+    "tot_samples": [
+      11,
+      11,
+      10,
+      11,
+      10,
+      10,
+      11,
+      12,
+      14,
+      11
+    ]
+  },
+  {
+    "threshold": 72000,
+    "num_triggers": 10,
+    "num_events_scanned": 629466,
+    "trigger_rate": 1.588648155738356e-05,
+    "tot_samples": [
+      11,
+      10,
+      10,
+      10,
+      10,
+      12,
+      10,
+      10,
+      12,
+      12
+    ]
+  }
+]

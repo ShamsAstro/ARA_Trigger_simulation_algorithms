@@ -23,16 +23,16 @@ n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [97000]*N_of_channels  # ADC counts
+THRESHOLD_V= [95200]*N_of_channels  # ADC counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 100 
+SCAN_RATE = 300 
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(120, 200, 15),   
     np.arange(200, 400, 10),  
     np.arange(400, 600, 25)   
 ])  
-PULSE_AMPLITUDES= np.arange(100, 600,40)
+#PULSE_AMPLITUDES= np.arange(100, 600,40)
 
 """
 #preparring the sample pulse

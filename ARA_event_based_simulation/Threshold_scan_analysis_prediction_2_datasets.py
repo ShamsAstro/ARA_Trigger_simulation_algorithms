@@ -5,10 +5,10 @@ from pathlib import Path
 
 # ----------------- CONFIG -----------------
 IN_JSON_A = Path("threshold_scan_rates_large.json")
-IN_JSON_B = Path("threshold_scan_rates_Eliminate_low_tot.json")
+IN_JSON_B = Path("threshold_scan_rates_Eliminate_10_tot_long.json")
 
 labelA = "PURE noise"
-labelB = "PURE noise, TOT>=4"
+labelB = "PURE noise, TOT>=10 samples"
 
 X_axis_start = 30000  # for zooming in the plot
 Y_axis_end = 10**10  # for zooming in the plot
@@ -20,7 +20,7 @@ TARGET_HZ = 5.0             # target trigger rate
 FIT_START_THRESHOLD_A = 60000
 FIT_START_THRESHOLD_B = 60000
 
-OUT_PNG = Path("trigger_rate_hz_vs_threshold_fit_compare.png")
+OUT_PNG = Path("trigger_rate_hz_vs_threshold_fit_compare_10tot_long.png")
 # ------------------------------------------
 
 def load_results(path: Path):
