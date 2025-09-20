@@ -27,16 +27,16 @@ N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
 SCAN_TIME_LIMIT_SEC       = 3800         #3600     # one hour
 START_THRESHOLD           = 2000     # in POWER units (ADC^2), by your spec
-THRESHOLD_STEP            = 2500     # increment per completed threshold
+THRESHOLD_STEP            = 1700     # increment per completed threshold
 TRIGGERS_PER_THRESHOLD    = 10       # stop each threshold at n triggers
-MIN_ALLOWED_TOT          = 10        # in samples (ns / TIME_STEP_NS), minimum TOT to consider a trigger valid
+MIN_ALLOWED_TOT          = 20        # in samples (ns / TIME_STEP_NS), minimum TOT to consider a trigger valid
 
 # Impulse-response JSON path (adjust if needed)
 # If you implemented caching in sim_functions, it will be used automatically.
 impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_scan_rates_Eliminate_10_tot_long.json")
+OUT_JSON = Path("threshold_scan_rates_Eliminate_20_tot_long.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
