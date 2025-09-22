@@ -18,7 +18,7 @@ TARGET_HZ = 5.0             # target trigger rate
 
 # You can use the same fit-start threshold for both, or set distinct ones:
 FIT_START_THRESHOLD_A = 60000
-FIT_START_THRESHOLD_B = 60000
+FIT_START_THRESHOLD_B = 45000
 
 OUT_PNG = Path("trigger_rate_hz_vs_threshold_fit_compare_20tot_long.png")
 # ------------------------------------------

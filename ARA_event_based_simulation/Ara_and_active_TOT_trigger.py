@@ -23,16 +23,16 @@ n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [91185]*N_of_channels  # ADC^2 counts
+THRESHOLD_V= [78761]*N_of_channels  # ADC^2 counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
 SCAN_RATE = 300 
-MIN_ALLOWED_TOT= 4 # in samples (ns / TIME_STEP_NS), minimum TOT to consider a trigger valid
+MIN_ALLOWED_TOT= 10 # in samples (ns / TIME_STEP_NS), minimum TOT to consider a trigger valid
 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(10, 200, 10),   
+    np.arange(100, 200, 15),   
     np.arange(200, 400, 20),  
-    np.arange(400, 600, 50)   
+    np.arange(400, 600, 25)   
 ])  
 #PULSE_AMPLITUDES= np.arange(100, 600,10)
 
@@ -121,12 +121,12 @@ plt.plot(SNR_values, pass_fraction, marker='o', label='Pass Fraction vs SNR')
 plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='Sigmoid Fit')
 plt.axhline(y=0.5, color='r', linestyle='--', label='50% Pass Threshold')
 plt.axvline(x=b, color='g', linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
-plt.title('Trigger_efficiency_scan_at_5Hz_target_threshold_w_TOT_trigger_eliminate_4tot_long.png')
+plt.title('Trigger_efficiency_scan_at_5Hz_target_threshold_w_TOT_trigger_eliminate_10tot_long.png')
 plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig("Trigger_efficiency_scan_rate_5Hz_target_4TOT_trigger_tentative.png")
+plt.savefig("TESTNOW_10TOT.png")
 
 
 
@@ -137,7 +137,7 @@ plt.title('Time Over Threshold (TOT) vs SNR for Triggered Events_ 5Hz target thr
 plt.xlabel('SNR')
 plt.ylabel('Time Over Threshold (ns)')
 plt.grid()
-plt.savefig("TOT_scan_rate_5Hz_target_4TOT_trigger_tentative.png")
+#plt.savefig("TOT_scan_rate_5Hz_target_4TOT_trigger_tentative.png")
 
 """
 """
