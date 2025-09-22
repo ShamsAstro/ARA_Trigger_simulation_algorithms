@@ -25,9 +25,9 @@ SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9  # ns
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
-SCAN_TIME_LIMIT_SEC       = 3800         #3600     # one hour
-START_THRESHOLD           = 2000     # in POWER units (ADC^2), by your spec
-THRESHOLD_STEP            = 1700     # increment per completed threshold
+SCAN_TIME_LIMIT_SEC       = 3600*10         #3600     # one hour
+START_THRESHOLD           = 65000     # in POWER units (ADC^2), by your spec
+THRESHOLD_STEP            = 200     # increment per completed threshold
 TRIGGERS_PER_THRESHOLD    = 10       # stop each threshold at n triggers
 MIN_ALLOWED_TOT          = 20        # in samples (ns / TIME_STEP_NS), minimum TOT to consider a trigger valid
 
@@ -36,7 +36,7 @@ MIN_ALLOWED_TOT          = 20        # in samples (ns / TIME_STEP_NS), minimum T
 impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_scan_rates_Eliminate_20_tot_long.json")
+OUT_JSON = Path("threshold_scan_rates_Eliminate_20_65000_tot_long.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
@@ -119,9 +119,6 @@ def main():
                     if tot> MIN_ALLOWED_TOT:  # Only consider events with TOT greater than 5 nsamples
                         tot_samples.append(int(tot))
                         num_triggers += 1
-
-                    # Optional: brief progress line
-                    if num_triggers % 2 == 0:  # print every few triggers
                         rate = num_triggers / num_events_scanned
                         print(f"  Triggers: {num_triggers}/{TRIGGERS_PER_THRESHOLD} | "
                               f"Events: {num_events_scanned} | "
