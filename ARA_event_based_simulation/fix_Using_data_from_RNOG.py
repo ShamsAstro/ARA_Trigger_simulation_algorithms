@@ -59,7 +59,7 @@ def get_impulse_arrays(json_path, channel_key):
         _impulse_cache[key] = arrs
     return arrs
 
-impulse = get_impulse_arrays(impulse_response_path, "ch0")  #"ch2_2x_amp"
+impulse = get_impulse_arrays(impulse_response_path, "ch2_2x_amp")  #"ch2_2x_amp"
 
 plt.plot(impulse[0], impulse[1])
 plt.title("Impulse response in frequency domain")
