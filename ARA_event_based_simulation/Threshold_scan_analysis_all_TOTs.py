@@ -123,9 +123,10 @@ def main():
         plt.ylim(top=Y_axis_end)
         out_file = OUT_DIR / f"compare_A_vs_TOT{tot_key}.png"
         plt.tight_layout()
-        plt.savefig(out_file)
+        #plt.savefig(out_file)
         plt.close()
-        print(f"Saved {out_file}")
+        #print(f"Saved {out_file}")
+        print(tot_key, round(thr_at_target_B))
 
     # Combined plot
     plt.figure(figsize=(12, 7))
@@ -151,7 +152,7 @@ def main():
     plt.ylim(top=Y_axis_end)
     out_file = OUT_DIR / "compare_all_TOT.png"
     plt.tight_layout()
-    plt.savefig(out_file)
+    #plt.savefig(out_file)
     plt.close()
     print(f"Saved {out_file}")
 

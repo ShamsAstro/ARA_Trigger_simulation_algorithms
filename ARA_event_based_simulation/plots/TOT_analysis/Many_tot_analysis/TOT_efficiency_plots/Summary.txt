@@ -1,0 +1,12 @@
+50% efficiency SNR summary:
+TOT≥3: 50% SNR ≈ 2.85
+TOT≥4: 50% SNR ≈ 2.80
+TOT≥5: 50% SNR ≈ 2.81
+TOT≥6: 50% SNR ≈ 2.80
+TOT≥7: 50% SNR ≈ 2.78
+TOT≥8: 50% SNR ≈ 2.84
+TOT≥9: 50% SNR ≈ 2.85
+TOT≥10: 50% SNR ≈ 2.87
+TOT≥11: 50% SNR ≈ 2.93
+TOT≥12: 50% SNR ≈ 2.95
+TOT≥13: 50% SNR ≈ 3.05

@@ -42,9 +42,14 @@ def envelope_with_edge_rules(x: np.ndarray, window_points: int = 10) -> np.ndarr
     """
     x = np.asarray(x, dtype=float)
     n = x.size
+
+
     if n == 0:
         return x.copy()
-
+        
+    if window_points == 0:
+        return x.copy()
+        
     if window_points % 2 != 0:
         raise ValueError("window_points should be even (e.g. 10).")
 
