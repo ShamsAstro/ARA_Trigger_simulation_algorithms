@@ -149,8 +149,8 @@ def find_ARA_env_triggers(
 
     r0 = int(min(first_idxs))
     return [{
-        "t_trigger": float(t[r0]),
-        "channels": fired_channels.tolist()
+        "t_trigger": float(t[r0]),  # earliest crossing time
+        "channels": fired_channels.tolist()  # all channels that fired anywhere in event
     }]
 
 
