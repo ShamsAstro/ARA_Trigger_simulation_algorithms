@@ -25,9 +25,9 @@ SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9  # ns
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
-SCAN_TIME_LIMIT_SEC       = 120         #3600     # one hour
-START_THRESHOLD           = 35000     # in POWER units (ADC^2), by your spec
-THRESHOLD_STEP            = 1000     # increment per completed threshold
+SCAN_TIME_LIMIT_SEC       = 3600*2         #3600     # one hour
+START_THRESHOLD           = 25000     # in POWER units (ADC^2), by your spec
+THRESHOLD_STEP            = 3000     # increment per completed threshold
 TRIGGERS_PER_THRESHOLD    = 10       # stop each threshold at n triggers
 
 # Impulse-response JSON path (adjust if needed)
@@ -39,7 +39,7 @@ with open(pulse_json_path) as f:
 impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_scan_rates.json")
+OUT_JSON = Path("threshold_scan_rates_2h_scan.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
