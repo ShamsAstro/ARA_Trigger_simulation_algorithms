@@ -134,15 +134,15 @@ time_ns = time_ns[mask]
 voltages = voltages[mask]
 time_ns = time_ns - time_ns[0] + 450
 # save times and amplitudes in a json file as t_axis_ns and avg_wave
-new_pulse_json_path = Path("new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
-with open(new_pulse_json_path, 'w') as f:
-    json.dump({'t_axis_ns': time_ns.tolist(), 'avg_wave': voltages.tolist()}, f)
+
+#new_pulse_json_path = Path("new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
+#with open(new_pulse_json_path, 'w') as f:
+#    json.dump({'t_axis_ns': time_ns.tolist(), 'avg_wave': voltages.tolist()}, f)
 
 
 
 plt.plot(time_ns, voltages)
 plt.xlabel("Time (ns)")
-plt.xlim(235, 235+121)
 plt.ylabel("Normalized Voltage")
 plt.title("New Pulse Waveform from ARA_event_based_simulation_V2")
 plt.grid()

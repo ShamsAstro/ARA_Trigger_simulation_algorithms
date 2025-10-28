@@ -23,21 +23,24 @@ n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [95210]*N_of_channels  # ADC counts
+THRESHOLD_V= [71684]*N_of_channels  # ADC counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 1
-#PULSE_AMPLITUDES = np.concatenate([
-#    np.arange(120, 200, 15),   
-#    np.arange(200, 400, 15),  
-#    np.arange(400, 550, 10)   
-#])  
+SCAN_RATE = 250
+PULSE_AMPLITUDES = np.concatenate([
+    np.arange(120, 200, 15),   
+    np.arange(200, 400, 15),  
+    np.arange(400, 550, 15)   
+])  
 #PULSE_AMPLITUDES= np.arange(100, 600,40)
-PULSE_AMPLITUDES= np.arange(100, 600,100)
+#PULSE_AMPLITUDES= np.arange(100, 600,100)
 
 
-pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
-with open(pulse_json_path) as f:
+#pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
+#with open(pulse_json_path) as f:
+#    pulse_data = json.load(f)
+
+with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
     pulse_data = json.load(f)
     
 impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
@@ -77,7 +80,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
             
         time_axis = t + time_start  # Adjust time axis for the current run
         #finding if channels exceed the threshold
-        plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
+        #plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
         SNR = run_pulse_amplitude / NOISE_EQUALIZE
         triggers = find_ARA_env_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
         if len(triggers) > 0:
@@ -93,7 +96,7 @@ params, _ = curve_fit(sigmoid, SNR_values, pass_fraction, p0=[1, np.mean(SNR_val
 a, b = params
 # Generate sigmoid values for plotting
 pass_fraction_sigmoid = sigmoid(np.array(SNR_values), a, b)
-"""
+
 
 # Plotting the results
 plt.figure(figsize=(10, 6))
@@ -101,14 +104,13 @@ plt.plot(SNR_values, pass_fraction, marker='o', label='Pass Fraction vs SNR')
 plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='Sigmoid Fit')
 plt.axhline(y=0.5, color='r', linestyle='--', label='50% Pass Threshold')
 plt.axvline(x=b, color='g', linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
-plt.title('ARA Trigger Efficiency Scan at 5Hz target threshold')
+plt.title('ARA Trigger Efficiency Scan at 5Hz target threshold_RNOG_like_pulse')
 plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig("Trigger_efficiency_scan_at_5Hz_target_threshold.png")
+plt.savefig("Trigger_efficiency_scan_RNOG_pulse.png")
 
 
 #printing the sigmoid parameters
 print(f"Sigmoid parameters: a = {a}, b = {b} (50% efficiency SNR)")
-"""

@@ -23,10 +23,10 @@ n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [90000]*N_of_channels  # ADC^2 counts
+THRESHOLD_V= [97102]*N_of_channels  # ADC^2 counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 200 
+SCAN_RATE = 400 
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(100, 400, 10),   
     np.arange(12, 22, 0.5),  
@@ -35,16 +35,20 @@ PULSE_AMPLITUDES = np.concatenate([
 PULSE_AMPLITUDES= np.arange(100, 500,10)
 
 """
-#preparring the sample pulse
-jsons_folder = Path(__file__).parent / "jsons"
-pulse_json_path = jsons_folder / "upsampled_2filter_pulse_example.json"
-impulse_response_path = jsons_folder / "impulse_response_Freauency_35_240.json"
-
+#DATA FROM ARA_event_based_simulation_V2
+pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
 with open(pulse_json_path) as f:
     pulse_data = json.load(f)
+   
+impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 """
-with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
+
+
+#old data
+pulse_json_path = Path("../RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json").resolve()
+with open(pulse_json_path) as f:
     pulse_data = json.load(f)
+    
 impulse_response_path = Path("../RNOG_sim_copy/jsons/impulse_response_Freauency_35_240.json").resolve()
 
 
@@ -122,7 +126,7 @@ plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig("Efficiency_Fixed_trigger.png")
+plt.savefig("Delete_benchmark_test_1.png")
 
 
 # Plot TOT vs SNR
@@ -132,4 +136,4 @@ plt.title('Time Over Threshold (TOT) vs SNR for Triggered Events')
 plt.xlabel('SNR')
 plt.ylabel('Time Over Threshold (ns)')
 plt.grid()
-plt.savefig("Fixed_TOT_per signals.png")
+plt.savefig("Delete_benchmark_test.png")
