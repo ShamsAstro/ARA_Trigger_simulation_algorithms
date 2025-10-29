@@ -25,12 +25,13 @@ SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9  # ns
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
-SCAN_TIME_LIMIT_SEC       = 3600*3   # 2 hours per TOT elimination setting
+SCAN_TIME_LIMIT_SEC       = 3600*1.5  #3600*3   # 2 hours per TOT elimination setting
 START_THRESHOLD           = 15000    # in POWER units (ADC^2)
 THRESHOLD_STEP            = 1500      # increment per completed threshold
 TRIGGERS_PER_THRESHOLD    = 12       # stop each threshold at n triggers
-starting_MIN_ALLOWED_TOT  = 2        # in samples (ns / TIME_STEP_NS), minimum TOT to consider a trigger valid
-ending_MIN_ALLOWED_TOT    = 11       # in samples (ns / TIME_STEP_NS
+starting_MIN_ALLOWED_TOT  = 0        # in samples (ns / TIME_STEP_NS), minimum TOT to consider a trigger valid
+ending_MIN_ALLOWED_TOT    = 10      # in samples (ns / TIME_STEP_NS
+envelope_samples = 4 #real experiment uses 10
 # Impulse-response JSON path 
 pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
 with open(pulse_json_path) as f:
@@ -39,7 +40,7 @@ with open(pulse_json_path) as f:
 impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 # Output file
-OUT_JSON = Path("Full_threshold_scan_long_ARA_data.json")
+OUT_JSON = Path("Full_threshold_scan_full_4env_ARA_data.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
@@ -92,17 +93,19 @@ def run_scan(min_tot: int, results_dict: dict):
                     channel_signals,
                     t_axis,
                     threshold=THRESHOLD_V,
-                    n_channels_required=N_REQ_COINC
+                    n_channels_required=N_REQ_COINC,
+                    envelope_window_points=envelope_samples
                 )
 
                 num_events_scanned += 1
 
                 if triggers:
-                    tot, n_ch_trig = TOT_finder(
+                    tot, n_ch_trig = TOT_finder_mod(
                         channel_signals,
                         t_axis,
                         threshold=THRESHOLD_V,
-                        n_channels_required=N_REQ_COINC
+                        n_channels_required=N_REQ_COINC,
+                        env_parameter=envelope_samples  
                     )
                     if tot > min_tot:
                         tot_samples.append(int(tot))
