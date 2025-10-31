@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')   
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
@@ -11,6 +13,7 @@ from pathlib import Path
 from scipy.optimize import curve_fit
 from sim_functions import *
 from trig_functions import *
+
 
 
 #parameters
@@ -26,23 +29,25 @@ N_of_channels = 8
 THRESHOLD_V= [71684]*N_of_channels  # ADC counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 250
+SCAN_RATE = 3
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(120, 200, 15),   
     np.arange(200, 400, 15),  
     np.arange(400, 550, 15)   
 ])  
-#PULSE_AMPLITUDES= np.arange(100, 600,40)
+PULSE_AMPLITUDES= np.arange(500, 600,40)
 #PULSE_AMPLITUDES= np.arange(100, 600,100)
 
-
-#pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
-#with open(pulse_json_path) as f:
+#old RNO-G pulse
+#with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
 #    pulse_data = json.load(f)
+ 
 
-with open('/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/RNOG_sim_copy/jsons/upsampled_2filter_pulse_example.json') as f:
+#DATA FROM ARA_event_based_simulation_V2
+pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
+with open(pulse_json_path) as f:
     pulse_data = json.load(f)
-    
+   
 impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 
@@ -80,7 +85,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
             
         time_axis = t + time_start  # Adjust time axis for the current run
         #finding if channels exceed the threshold
-        #plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
+        plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
         SNR = run_pulse_amplitude / NOISE_EQUALIZE
         triggers = find_ARA_env_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
         if len(triggers) > 0:

@@ -22,25 +22,27 @@ SIM_DURATION_SAMPLES = int(SIM_DURATION_NS / TIME_STEP)
 N_of_channels   = 8
 N_REQ           = 3
 SCAN_RATE       = 500
+envelope_samples = 4 # Number of samples for envelope calculation
 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(100, 200, 10),
-    np.arange(200, 400, 10),
-    np.arange(400, 521, 40)
+    np.arange(100, 200, 25),
+    np.arange(200, 311, 10),
+    np.arange(340, 521, 40)
 ])
 
 # TOT elimination thresholds list
 TOT_thresholds = {
-    0: 71727,
-    2: 70221,
-    3: 68177,
-    4: 66935,
-    5: 64283,
-    6: 60318,
-    7: 56467,
-    8: 53048,
-    9: 49232,
-    10: 45405
+    0: 71983,
+    1: 71566,
+    2: 72196,
+    3: 71689,
+    4: 68810,
+    5: 64620,
+    6: 52881,
+    7: 41093,
+    8: 35058,
+    9: 31800,
+    10: 29500
 }
 
 # ─────────────────────────────────────────────────────────────
@@ -65,7 +67,7 @@ pulse_time = pulse_time - pulse_time[0]
 def sigmoid(x, a, b):
     return 1 / (1 + np.exp(-(x - b) / a))
 
-OUT_DIR = Path("TOT_efficiency_plots_new_ARA_pulse")
+OUT_DIR = Path("TOT_efficiency_plots_new_ARA_pulse_4env")
 OUT_DIR.mkdir(exist_ok=True)
 
 efficiency_summary = {}
@@ -110,11 +112,13 @@ for min_tot, thr_value in TOT_thresholds.items():
             SNR = run_pulse_amplitude / NOISE_EQUALIZE
             triggers = find_ARA_env_triggers(channel_signals, time_axis,
                                              threshold=[thr_value]*N_of_channels,
-                                             n_channels_required=N_REQ)
+                                             n_channels_required=N_REQ,
+                                             envelope_window_points=envelope_samples)
             if triggers:
-                TOT, n_triggered_channels = TOT_finder(channel_signals, time_axis,
+                TOT, n_triggered_channels = TOT_finder_mod(channel_signals, time_axis,
                                                        threshold=[thr_value]*N_of_channels,
-                                                       n_channels_required=N_REQ)
+                                                       n_channels_required=N_REQ,
+                                                        env_parameter=envelope_samples )
                 if TOT > min_tot:
                     COINC += 1
                     TOT_values.append(TOT)

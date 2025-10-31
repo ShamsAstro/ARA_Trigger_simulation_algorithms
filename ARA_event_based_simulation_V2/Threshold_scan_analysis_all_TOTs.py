@@ -5,19 +5,19 @@ from pathlib import Path
 
 # ----------------- CONFIG -----------------
 IN_JSON_A = Path("threshold_scan_rates_2h_scan.json")
-IN_JSON_B = Path("Full_threshold_scan_short_5env_ARA_data.json")
+IN_JSON_B = Path("Full_threshold_scan_full_4env_ARA_data.json")
 
 labelA = "PURE noise"
 EVENT_NS = 170.0            # ns
 TARGET_HZ = 5.0             # Hz target rate
 
 FIT_START_THRESHOLD_A = 42000
-FIT_START_THRESHOLD_B = 42000
+FIT_START_THRESHOLD_B = 27000
 
 X_axis_start = 10000
 Y_axis_end = 1e10
 
-OUT_DIR = Path("plots_tot_5env_test")
+OUT_DIR = Path("plots_tot_4env_full_scan")
 OUT_DIR.mkdir(exist_ok=True)
 
 # ------------------------------------------
@@ -123,10 +123,10 @@ def main():
         plt.ylim(top=Y_axis_end)
         out_file = OUT_DIR / f"compare_A_vs_TOT{tot_key}.png"
         plt.tight_layout()
-        #if tot_key <9:
-        plt.savefig(out_file)
-        print(f"Saved {out_file}")
-        print(tot_key, round(thr_at_target_B))
+        if int(tot_key) >=9:
+            plt.savefig(out_file)
+            #print(f"Saved {out_file}")
+            print(tot_key, round(thr_at_target_B))
         
         plt.close()
         

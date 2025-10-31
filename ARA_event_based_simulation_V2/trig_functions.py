@@ -224,6 +224,93 @@ def TOT_finder(
     return TOT_avg_samples, channels_triggered
 
 
+
+def ARA_CSW_trigger(
+    channel_signals,
+    time_axis,
+    *,
+    threshold,
+    noise_rms
+):
+    """
+    EVENT-WIDE CSW (Coherent Sum Window) trigger:
+      1) For each channel, find the index of its maximum *magnitude* sample.
+      2) Roll the waveform so that this max aligns at the center sample.
+         (Samples shifted past one edge reappear on the other edge.)
+      3) Coherently sum all aligned waveforms sample-by-sample.
+      4) Compute the event total CSW power: sum_t [ (sum_ch x_ch(t))^2 ].
+      5) Compare to an effective (single) threshold:
+             power_threshold = threshold * len(time_axis) * noise_rms**2
+         If CSW power exceeds this, report ONE trigger.
+
+    Returns
+    -------
+    triggers : list[dict]  (length 0 or 1)
+        Each: {"t_trigger": float, "channels": list[int]}
+        - t_trigger is the time at the center sample after alignment.
+        - channels are all channels (indices) used in CSW.
+    """
+    # --- inputs -> arrays ---
+    t = np.asarray(time_axis, dtype=float)
+    X = [np.asarray(sig, dtype=float) for sig in channel_signals]
+    n_ch = len(X)
+    if n_ch == 0:
+        return []
+
+    N = X[0].size
+    if any(x.size != N for x in X) or t.size != N:
+        raise ValueError("All channels and time_axis must have the same length.")
+
+    # --- scalars ---
+    try:
+        thr = float(threshold)
+    except Exception as e:
+        raise ValueError("threshold must be a scalar float-like value.") from e
+
+    try:
+        sigma_n = float(noise_rms)
+    except Exception as e:
+        raise ValueError("noise_rms must be a scalar float-like value.") from e
+
+    # --- align (roll) each channel so that |x| maximum is at the center ---
+    mid = N // 2
+    aligned = np.empty((n_ch, N), dtype=float)
+    for ch in range(n_ch):
+        x = X[ch]
+        # maximum *magnitude* (so negative peaks count too)
+        k = int(np.argmax(np.abs(x)))
+        shift = mid - k
+        aligned[ch] = np.roll(x, shift)
+
+    # --- coherent sum across channels, then power trace and total event power ---
+    s = np.sum(aligned, axis=0)  # coherent sum
+    csw_power_trace = s * s
+    
+
+    # --- effective threshold ---
+    power_threshold = float(thr* (sigma_n**2))
+
+    # --- decision ---
+    if np.max(csw_power_trace)<=power_threshold:
+        return []
+
+
+    # Report ONE trigger: center time after alignment
+    t_center = float(t[mid])
+    fired_channels = list(range(n_ch))
+
+    return [{
+        "t_trigger": t_center,
+        "channels": fired_channels
+    }]
+
+
+
+
+
+
+
+
 def TOT_finder_mod(
     channel_signals,
     time_axis,

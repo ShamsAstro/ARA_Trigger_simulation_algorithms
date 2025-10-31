@@ -4083,17 +4083,8 @@
         5,
         6
       ]
-    },
-    {
-      "threshold": 60000,
-      "num_triggers": 2,
-      "num_events_scanned": 58604,
-      "trigger_rate": 3.4127363319909904e-05,
-      "tot_samples": [
-        5,
-        5
-      ]
     }
+    
   ],
   "6": [
     {
