@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')   
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
@@ -24,17 +26,18 @@ SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)
 N_of_channels       = 8
 N_REQ               = 1                        # not needed for CSW, but kept
 COINC_NS            = SIMULATION_DURATION_NS
-SCAN_RATE           = 50
+SCAN_RATE           = 4
 
 # ---- define a single CSW trigger value (you can change this) ----
-CSW_THRESHOLD =150   # <- “range of trigger of 5” interpreted as trigger value = 5
+CSW_THRESHOLD =250   # <- “range of trigger of 5” interpreted as trigger value = 5
+CSW_corr_scan_step= 1 
 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(120, 200, 30),
-    np.arange(200, 400, 30),
-    np.arange(400, 550, 30)
+    np.arange(60, 200, 30),
+    np.arange(200, 400, 45),
+    np.arange(400, 550, 60)
 ])
-#PULSE_AMPLITUDES = np.array([0])
+PULSE_AMPLITUDES = np.array([300])
 
 # ---------------- Load pulse and impulse response ----------------
 pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
@@ -87,8 +90,10 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
             channel_signals,
             time_axis,
             threshold=CSW_THRESHOLD,
-            noise_rms=NOISE_EQUALIZE,     # use your noise scale as RMS
+            noise_rms=NOISE_EQUALIZE, # use your noise scale as RMS
+            STEP=CSW_corr_scan_step 
         )
+        #_no_shifting  
 
         if len(triggers) > 0:
             COINC += 1

@@ -252,7 +252,6 @@ def plot_channels_signals(time_axis, channel_signals, title="8 Channels Signals"
     plt.grid()
     full_title = f"{title} - {int(time_axis[0])} ns to {int(time_axis[-1])} ns"
     plt.savefig(f"{full_title}.png")
-    plt.show()
     plt.close()
 
 def make_full_signal_angle(impulse_json_path, SIMULATION_DURATION_NS, SAMPLING_RATE, NOISE_EQUALIZE,

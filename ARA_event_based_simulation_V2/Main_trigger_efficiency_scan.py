@@ -85,7 +85,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
             
         time_axis = t + time_start  # Adjust time axis for the current run
         #finding if channels exceed the threshold
-        plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
+        #plot_channels_signals(time_axis, channel_signals, title=f"Run {run+1}, Scan {SCAN+1}, Pulse Amplitude {run_pulse_amplitude} ADC")
         SNR = run_pulse_amplitude / NOISE_EQUALIZE
         triggers = find_ARA_env_triggers(channel_signals, time_axis, threshold=THRESHOLD_V, n_channels_required=N_REQ)
         if len(triggers) > 0:

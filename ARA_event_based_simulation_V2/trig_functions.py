@@ -225,7 +225,7 @@ def TOT_finder(
 
 
 
-def ARA_CSW_trigger(
+def ARA_CSW_trigger_no_shifting(
     channel_signals,
     time_axis,
     *,
@@ -242,6 +242,87 @@ def ARA_CSW_trigger(
       5) Compare to an effective (single) threshold:
              power_threshold = threshold * len(time_axis) * noise_rms**2
          If CSW power exceeds this, report ONE trigger.
+    Returns
+    -------
+    triggers : list[dict]  (length 0 or 1)
+        Each: {"t_trigger": float, "channels": list[int]}
+        - t_trigger is the time at the center sample after alignment.
+        - channels are all channels (indices) used in CSW.
+    """
+    # --- inputs -> arrays ---
+    t = np.asarray(time_axis, dtype=float)
+    X = [np.asarray(sig, dtype=float) for sig in channel_signals]
+    n_ch = len(X)
+    if n_ch == 0:
+        return []
+    N = X[0].size
+    if any(x.size != N for x in X) or t.size != N:
+        raise ValueError("All channels and time_axis must have the same length.")
+    # --- scalars ---
+    try:
+        thr = float(threshold)
+    except Exception as e:
+        raise ValueError("threshold must be a scalar float-like value.") from e
+    try:
+        sigma_n = float(noise_rms)
+    except Exception as e:
+        raise ValueError("noise_rms must be a scalar float-like value.") from e
+    # --- align (roll) each channel so that |x| maximum is at the center ---
+
+    aligned = X
+    # --- coherent sum across channels, then power trace and total event power ---
+    s = np.sum(aligned, axis=0)  # coherent sum
+    csw_power_trace = s * s
+    
+    
+    # --- effective threshold ---
+    power_threshold = float(thr *(sigma_n**2))
+    """
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(t, csw_power_trace, label='CSW Power Trace')
+    plt.xlabel('Time (ns)')
+    plt.axhline(y=power_threshold, color='r', linestyle='--', label='CSW Power Threshold')
+    plt.ylabel('CSW Power')
+    plt.title('CSW Power Trace vs Time')
+    plt.legend()
+    plt.grid()
+    plt.show()
+    """
+    # --- decision ---
+    if np.max(csw_power_trace)<=power_threshold:
+        return []
+
+    # Report ONE trigger: center time after alignment
+    t_center = float(t[mid])
+    fired_channels = list(range(n_ch))
+    return [{
+        "t_trigger": t_center,
+        "channels": fired_channels
+    }]
+
+
+
+def ARA_CSW_trigger(
+    channel_signals,
+    time_axis,
+    *,
+    threshold,
+    noise_rms,
+    STEP=3
+):
+    """
+    EVENT-WIDE CSW (Coherent Sum Window) trigger with correlation-based alignment:
+      0) Choose reference channel = channel with highest absolute peak amplitude.
+      1) Center the reference by rolling so its |max| sample is at the middle index.
+      2) For each other channel, find the roll (tested every 2 samples) that maximizes
+         its correlation (dot product) with the centered reference, then apply that roll.
+         (Rolling is circular, i.e., samples shifted past one edge reappear on the other.)
+      3) Coherently sum aligned waveforms sample-by-sample.
+      4) Compute event CSW power: sum_t [ (sum_ch x_ch(t))^2 ] (we keep the trace too).
+      5) Compare to a single effective threshold, same convention as your code:
+             power_threshold = threshold * (noise_rms**2)
+         If max power in the trace exceeds this, report ONE trigger.
 
     Returns
     -------
@@ -272,40 +353,73 @@ def ARA_CSW_trigger(
     except Exception as e:
         raise ValueError("noise_rms must be a scalar float-like value.") from e
 
-    # --- align (roll) each channel so that |x| maximum is at the center ---
     mid = N // 2
+    #scan range to take 120ns
+    scan_lim = int(120/(t[1]-t[0])) #120 ns is the longest possible time shift between two channels
+
+    # --- pick reference channel: largest absolute peak amplitude ---
+    peak_vals = [np.max(x)-np.min(x) for x in X]
+    ref_idx = int(np.argmax(peak_vals))
+    ref = X[ref_idx]
+
+    # --- center the reference channel at mid using its |max| position ---
+    ref_kmax = int(np.argmax(np.abs(ref)))
+    ref_center_shift = mid - ref_kmax
+    ref_centered = np.roll(ref, ref_center_shift)
+
+    # --- for each channel, find the best roll (every 2 samples) vs centered reference ---
     aligned = np.empty((n_ch, N), dtype=float)
     for ch in range(n_ch):
         x = X[ch]
-        # maximum *magnitude* (so negative peaks count too)
-        k = int(np.argmax(np.abs(x)))
-        shift = mid - k
-        aligned[ch] = np.roll(x, shift)
 
-    # --- coherent sum across channels, then power trace and total event power ---
-    s = np.sum(aligned, axis=0)  # coherent sum
+        if ch == ref_idx:
+            aligned[ch] = ref_centered
+            continue
+
+        best_shift = 0
+        best_corr = -np.inf
+
+        # Try all circular rolls s in [-N+1, ..., N-1] stepping by 2 samples
+        # We include the reference centering so everything ends up aligned to mid.
+        for s in range(-(scan_lim- 1), scan_lim, STEP):
+            x_rolled = np.roll(x, ref_center_shift + s)
+            # Dot product with reference; normalization is unnecessary for a fixed x across s
+            corr = float(np.dot(x_rolled, ref_centered))
+            if corr > best_corr:
+                best_corr = corr
+                best_shift = s
+
+        aligned[ch] = np.roll(x, ref_center_shift + best_shift)
+
+    # --- coherent sum, power trace, threshold ---
+    s = np.sum(aligned, axis=0)
     csw_power_trace = s * s
+
+    power_threshold = float(thr * (sigma_n ** 2)) 
+
+    # --- plot for debugging ---
+    """
+    """
+    plt.figure(figsize=(10, 6))
+    plt.plot(t, csw_power_trace, label='CSW Power Trace')
+    plt.axhline(y=power_threshold, linestyle='--', label='CSW Power Threshold', color='red')
+    plt.xlabel('Time (ns)')
+    plt.ylabel('CSW Power')
+    plt.title('CSW Power Trace vs Time')
+    plt.legend()
+    plt.grid()
+    plt.show()
     
-
-    # --- effective threshold ---
-    power_threshold = float(thr* (sigma_n**2))
-
-    # --- decision ---
-    if np.max(csw_power_trace)<=power_threshold:
+    # --- decision (single event-wide trigger or none) ---
+    if np.max(csw_power_trace) <= power_threshold:
         return []
 
-
-    # Report ONE trigger: center time after alignment
     t_center = float(t[mid])
     fired_channels = list(range(n_ch))
-
     return [{
         "t_trigger": t_center,
         "channels": fired_channels
     }]
-
-
-
 
 
 

@@ -1,0 +1,38 @@
+[
+  {
+    "threshold": 50,
+    "num_triggers": 12,
+    "num_events_scanned": 12,
+    "trigger_rate": 1.0
+  },
+  {
+    "threshold": 75,
+    "num_triggers": 12,
+    "num_events_scanned": 18,
+    "trigger_rate": 0.6666666666666666
+  },
+  {
+    "threshold": 100,
+    "num_triggers": 12,
+    "num_events_scanned": 80,
+    "trigger_rate": 0.15
+  },
+  {
+    "threshold": 125,
+    "num_triggers": 12,
+    "num_events_scanned": 259,
+    "trigger_rate": 0.04633204633204633
+  },
+  {
+    "threshold": 150,
+    "num_triggers": 12,
+    "num_events_scanned": 2077,
+    "trigger_rate": 0.005777563793933558
+  },
+  {
+    "threshold": 175,
+    "num_triggers": 12,
+    "num_events_scanned": 9586,
+    "trigger_rate": 0.0012518255789693302
+  }
+]
