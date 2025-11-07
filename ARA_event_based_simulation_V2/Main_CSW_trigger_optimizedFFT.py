@@ -12,8 +12,9 @@ import json
 from pathlib import Path
 from scipy.optimize import curve_fit
 from sim_functions import *
-#from trig_functions import *
+from trig_functions import *
 from trig_functions_cop import *
+from scipy.signal import fftconvolve
 
 
 SAMPLING_RATE       = 3.2                      # GHz
@@ -31,7 +32,6 @@ SCAN_RATE           = 500
 
 # ---- define a single CSW trigger value (you can change this) ----
 CSW_THRESHOLD =250   # <- “range of trigger of 5” interpreted as trigger value = 5
-CSW_corr_scan_step= 2 
 
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(60, 200, 30),
@@ -57,10 +57,10 @@ pulse_time = pulse_time - pulse_time[0]  # Start from 0 ns
 # ---------------- Scan over amplitudes and build efficiency ----------------
 pass_fraction = []
 SNR_values = []
+
 #start benchmarking time
 start_time_benchmark = time.time()
 
-# ---------------- Main loop ----------------
 for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
     channel_signals = [[] for _ in range(N_of_channels)]
     time_start = run * SIMULATION_DURATION_NS
@@ -90,12 +90,11 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
         SNR = run_pulse_amplitude / NOISE_EQUALIZE
 
         # ---------- CSW trigger decision ----------
-        triggers = ARA_CSW_trigger(
+        triggers = ARA_CSW_trigger_FFT_optimized(
             channel_signals,
             time_axis,
             threshold=CSW_THRESHOLD,
             noise_rms=NOISE_EQUALIZE, # use your noise scale as RMS
-            STEP=CSW_corr_scan_step 
         )
         #_no_shifting  
 
@@ -110,6 +109,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
 end_time_benchmark = time.time()
 total_time_benchmark = end_time_benchmark - start_time_benchmark
 print(f"\nTotal benchmarking time: {total_time_benchmark:.2f} seconds")
+
 
 # ---------------- Sigmoid fit and plot ----------------
 def sigmoid(x, a, b):
@@ -133,6 +133,6 @@ plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig(f"Trigger_eff_scan_CSW_threshold_{CSW_THRESHOLD:.2f}_standard_shift.png")
+plt.savefig(f"Trigger_eff_scan_CSW_threshold_{CSW_THRESHOLD:.2f}_FFT.png")
 
 print(f"\nSigmoid parameters: a = {a}, b = {b} (50% efficiency SNR), CSW threshold = {CSW_THRESHOLD}")

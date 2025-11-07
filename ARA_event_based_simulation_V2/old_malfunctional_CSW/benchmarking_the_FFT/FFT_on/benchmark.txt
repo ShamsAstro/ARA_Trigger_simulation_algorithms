@@ -1,0 +1,12 @@
+ Progress: 10/10 completed
+Total benchmarking time: 2.40 seconds
+
+
+event rate:500
+ Progress: 13/13 completed #amplitudes
+Total benchmarking time: 27.53 seconds
+
+Sigmoid parameters: a = 6.687023111931226, b = 1.7194326214806197 (50% efficiency SNR), CSW threshold = 250
+
+7 hours of computation for 1s of simulation
+Performs better than the sliding dot product
