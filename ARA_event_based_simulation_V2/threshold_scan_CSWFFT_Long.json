@@ -1,0 +1,80 @@
+[
+  {
+    "threshold": 50.0,
+    "num_triggers": 12,
+    "num_events_scanned": 12,
+    "trigger_rate": 1.0
+  },
+  {
+    "threshold": 85.0,
+    "num_triggers": 12,
+    "num_events_scanned": 12,
+    "trigger_rate": 1.0
+  },
+  {
+    "threshold": 120.0,
+    "num_triggers": 12,
+    "num_events_scanned": 16,
+    "trigger_rate": 0.75
+  },
+  {
+    "threshold": 155.0,
+    "num_triggers": 12,
+    "num_events_scanned": 67,
+    "trigger_rate": 0.1791044776119403
+  },
+  {
+    "threshold": 190.0,
+    "num_triggers": 12,
+    "num_events_scanned": 134,
+    "trigger_rate": 0.08955223880597014
+  },
+  {
+    "threshold": 225.0,
+    "num_triggers": 12,
+    "num_events_scanned": 403,
+    "trigger_rate": 0.02977667493796526
+  },
+  {
+    "threshold": 260.0,
+    "num_triggers": 12,
+    "num_events_scanned": 2741,
+    "trigger_rate": 0.004377964246625319
+  },
+  {
+    "threshold": 295.0,
+    "num_triggers": 12,
+    "num_events_scanned": 3692,
+    "trigger_rate": 0.0032502708559046588
+  },
+  {
+    "threshold": 330.0,
+    "num_triggers": 12,
+    "num_events_scanned": 15941,
+    "trigger_rate": 0.000752775860987391
+  },
+  {
+    "threshold": 365.0,
+    "num_triggers": 12,
+    "num_events_scanned": 82679,
+    "trigger_rate": 0.00014513963642521076
+  },
+  {
+    "threshold": 400.0,
+    "num_triggers": 12,
+    "num_events_scanned": 367511,
+    "trigger_rate": 3.2652083883203496e-05
+  },
+  {
+    "threshold": 435.0,
+    "num_triggers": 12,
+    "num_events_scanned": 1277315,
+    "trigger_rate": 9.394706865573489e-06
+  },
+  {
+    "threshold": 470.0,
+    "num_triggers": 12,
+    "num_events_scanned": 6710824,
+    "trigger_rate": 1.7881559701163375e-06
+  }
+]
