@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # ----------------- CONFIG -----------------
-IN_JSON = Path("threshold_scan_rates_2h_scan.json")
+IN_JSON = Path("threshold_scan_CSWFFT_test.json")
 
 EVENT_NS = 170.0           # event duration in ns (≈ 1 / 5.88 MHz)
 TARGET_HZ = 5.0            # target trigger rate
-FIT_START_THRESHOLD = 48000 # choose where the exponential behavior starts
+FIT_START_THRESHOLD = 150 # choose where the exponential behavior starts
 
-OUT_PNG = Path("trigger_rate_hz_vs_threshold_2h_run.png")
+OUT_PNG = Path("trigger_rate_vs_threshold_CSW_FFT_finder_2.png")
 
 # ------------------------------------------
 
@@ -57,7 +57,7 @@ def intersection_threshold_for_rate(A, k, target_hz):
 
 def main():
     results = load_results(IN_JSON)
-
+    print(f"Loaded {len(results)} entries from {IN_JSON}")
     # Extract arrays
     thresholds = np.array([r["threshold"] for r in results], dtype=float)
     # Ensure sorted by threshold
@@ -89,6 +89,7 @@ def main():
     # scatter of measured rates (only plot positive values on log axis)
     mask_pos = rates_hz > 0
     plt.scatter(thresholds[mask_pos], rates_hz[mask_pos], s=40, label="Measured (Hz)")
+    print(len(thresholds), len(thresholds[mask_pos]), "data points, positive rates")
 
     # fit curve
     if x_grid is not None:

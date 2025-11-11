@@ -31,7 +31,7 @@ COINC_NS            = SIMULATION_DURATION_NS
 SCAN_RATE           = 500
 
 # ---- define a single CSW trigger value (you can change this) ----
-CSW_THRESHOLD =250   # <- “range of trigger of 5” interpreted as trigger value = 5
+CSW_THRESHOLD =502   # <- “range of trigger of 5” interpreted as trigger value = 5
 
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(60, 200, 30),
@@ -94,7 +94,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
             channel_signals,
             time_axis,
             threshold=CSW_THRESHOLD,
-            noise_rms=NOISE_EQUALIZE, # use your noise scale as RMS
+            noise_rms=NOISE_EQUALIZE # use your noise scale as RMS
         )
         #_no_shifting  
 
@@ -133,6 +133,6 @@ plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig(f"Trigger_eff_scan_CSW_threshold_{CSW_THRESHOLD:.2f}_FFT.png")
+plt.savefig(f"Trigger_eff_scan_CSW_threshold_{CSW_THRESHOLD:.2f}_FFT_5HzRate.png")
 
 print(f"\nSigmoid parameters: a = {a}, b = {b} (50% efficiency SNR), CSW threshold = {CSW_THRESHOLD}")
