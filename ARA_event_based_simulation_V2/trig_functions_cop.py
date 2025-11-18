@@ -518,7 +518,8 @@ def ARA_CSW_trigger_FFT_optimized(
     ref_kmax = int(np.argmax(np.abs(ref)))
     ref_center_shift = mid - ref_kmax   
     ref_centered = np.roll(ref, ref_center_shift)
-
+    shift_centers = []
+    
     # --- for each channel, find the best roll (every 2 samples) vs centered reference ---
     X_aligned, lags_samp, lags_sec, corr_pk = align_channels_fft_xcorr(
         X, 
@@ -529,16 +530,24 @@ def ARA_CSW_trigger_FFT_optimized(
         fractional=True, 
         edge_pad=64               # small pad helps avoid circular wrap
     )
+    shift_centers = lags_samp.tolist()
+    #remove the 0 values from shift_centers
+    shift_centers = [int(shift) for shift in shift_centers if shift != 0]
 
     csw, csw_power = coherent_sum(X_aligned)
 
     # Now you can threshold on csw_power max, or integrate over a small gate, etc.
-    peak_power = np.max(csw_power)
+    #peak_power = np.max(csw_power)
 
+    #divide the csw power into 20 sections, and taking the mean of the sections
+    csw_power_sections = np.array_split(csw_power, 10)
+    peak_power = np.max([np.mean(section) for section in csw_power_sections])
+    
     power_threshold = float(thr * (sigma_n ** 2)) 
 
     # --- plot for debugging ---
     """
+    
     
     #save name ref
     save_name_ref= str(round(t[0],1)) + '_'+ str(round(t[-1],1)) + '_refch'+ str(ref_idx)+'_CSW_FFT_trigger.png'
@@ -550,9 +559,11 @@ def ARA_CSW_trigger_FFT_optimized(
     plt.title('CSW Power Trace vs Time')
     plt.legend()
     plt.grid()
-    plt.savefig(save_name_ref)
-    plt.close()
+    #plt.savefig(save_name_ref)
+    plt.show()
+    #plt.close()
     """
+    
     # --- decision (single event-wide trigger or none) ---
     if peak_power <= power_threshold:
         return []
@@ -560,7 +571,7 @@ def ARA_CSW_trigger_FFT_optimized(
     t_center = float(t[mid])
     fired_channels = list(range(n_ch))
     return [{
-        "t_trigger": t_center,
+        "Shifts": shift_centers,
         "channels": fired_channels
     }]
 
@@ -627,7 +638,7 @@ def ARA_CSW_trigger(
     ref_kmax = int(np.argmax(np.abs(ref)))
     ref_center_shift = mid - ref_kmax   
     ref_centered = np.roll(ref, ref_center_shift)
-
+    shift_centers = []
     # --- for each channel, find the best roll (every 2 samples) vs centered reference ---
     aligned = np.empty((n_ch, N), dtype=float)
     for ch in range(n_ch):
@@ -649,7 +660,8 @@ def ARA_CSW_trigger(
             if corr > best_corr:
                 best_corr = corr
                 best_shift = s
-
+                
+        shift_centers.append(best_shift)
         aligned[ch] = np.roll(x, ref_center_shift + best_shift)
 
     # --- coherent sum, power trace, threshold ---
@@ -681,7 +693,7 @@ def ARA_CSW_trigger(
     t_center = float(t[mid])
     fired_channels = list(range(n_ch))
     return [{
-        "t_trigger": t_center,
+        "Shifts": shift_centers,
         "channels": fired_channels
     }]
 

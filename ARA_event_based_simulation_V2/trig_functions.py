@@ -301,6 +301,18 @@ def ARA_CSW_trigger_no_shifting(
         "channels": fired_channels
     }]
 
+def ARA_CSW_trigger_FFT_optimized(
+    channel_signals,
+    time_axis,
+    *,
+    threshold,
+    noise_rms
+):
+    """
+    EVENT-WIDE CSW (Coherent Sum Window) trigger with FFT optimization.
+    (Implementation omitted for brevity; similar to ARA_CSW_trigger but using FFTs.)
+    """
+    pass  # Placeholder for actual implementation
 
 
 def ARA_CSW_trigger(
@@ -364,7 +376,7 @@ def ARA_CSW_trigger(
 
     # --- center the reference channel at mid using its |max| position ---
     ref_kmax = int(np.argmax(np.abs(ref)))
-    ref_center_shift = mid - ref_kmax
+    ref_center_shift = mid - ref_kmax   
     ref_centered = np.roll(ref, ref_center_shift)
 
     # --- for each channel, find the best roll (every 2 samples) vs centered reference ---
@@ -399,7 +411,7 @@ def ARA_CSW_trigger(
 
     # --- plot for debugging ---
     """
-    """
+    
     plt.figure(figsize=(10, 6))
     plt.plot(t, csw_power_trace, label='CSW Power Trace')
     plt.axhline(y=power_threshold, linestyle='--', label='CSW Power Threshold', color='red')
@@ -409,7 +421,7 @@ def ARA_CSW_trigger(
     plt.legend()
     plt.grid()
     plt.show()
-    
+    """
     # --- decision (single event-wide trigger or none) ---
     if np.max(csw_power_trace) <= power_threshold:
         return []
@@ -420,8 +432,6 @@ def ARA_CSW_trigger(
         "t_trigger": t_center,
         "channels": fired_channels
     }]
-
-
 
 
 

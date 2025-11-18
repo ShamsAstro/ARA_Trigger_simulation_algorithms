@@ -2,7 +2,8 @@
 Total benchmarking time: 2.55 seconds
 
 
- Progress: 13/13 completed
+ Progress: 13/13 completed #amplitudes
 Total benchmarking time: 359.01 seconds
+step = 2 samples
 
 Sigmoid parameters: a = 7.301870731364279, b = 1.770570264905224 (50% efficiency SNR), CSW threshold = 250

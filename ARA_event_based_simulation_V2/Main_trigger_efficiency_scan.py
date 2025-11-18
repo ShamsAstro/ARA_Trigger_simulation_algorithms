@@ -26,16 +26,16 @@ n_of_windows = 1
 SIMULATION_DURATION_NS= n_of_windows/(WINDOW_SIZE) *1e9 #ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)  # Number of samples in the simulation duration
 N_of_channels = 8
-THRESHOLD_V= [71684]*N_of_channels  # ADC counts
+THRESHOLD_V= [71727]*N_of_channels  # ADC counts
 N_REQ = 3  # Number of channels required for a trigger
 COINC_NS = SIMULATION_DURATION_NS
-SCAN_RATE = 3
+SCAN_RATE = 800
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(120, 200, 15),   
     np.arange(200, 400, 15),  
     np.arange(400, 550, 15)   
 ])  
-PULSE_AMPLITUDES= np.arange(500, 600,40)
+#PULSE_AMPLITUDES= np.arange(500, 600,40)
 #PULSE_AMPLITUDES= np.arange(100, 600,100)
 
 #old RNO-G pulse
@@ -109,13 +109,13 @@ plt.plot(SNR_values, pass_fraction, marker='o', label='Pass Fraction vs SNR')
 plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='Sigmoid Fit')
 plt.axhline(y=0.5, color='r', linestyle='--', label='50% Pass Threshold')
 plt.axvline(x=b, color='g', linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
-plt.title('ARA Trigger Efficiency Scan at 5Hz target threshold_RNOG_like_pulse')
+plt.title('ARA Trigger Efficiency Scan at 5Hz target threshold_ARA_like_pulse')
 plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig("Trigger_efficiency_scan_RNOG_pulse.png")
+plt.savefig("Trigger_efficiency_scan_ARA_pulse.png")
 
 
 #printing the sigmoid parameters
-print(f"Sigmoid parameters: a = {a}, b = {b} (50% efficiency SNR)")
+print(f"Sigmoid parameters: a = {a}, b = {b} (50% efficiency SNR), THRESHOLD_V = {THRESHOLD_V[0]}")

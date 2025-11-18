@@ -27,9 +27,9 @@ N_WINDOWS                 = 1
 SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
-SCAN_TIME_LIMIT_SEC       = 60*60*10   # 10 hours
-START_THRESHOLD            = 50        # CSW trigger threshold
-THRESHOLD_STEP             = 35
+SCAN_TIME_LIMIT_SEC       = 60*60*1   # 10 hours
+START_THRESHOLD            = 6        # CSW trigger threshold
+THRESHOLD_STEP             = 4
 TRIGGERS_PER_THRESHOLD     = 12
 
 # Input JSONs
@@ -40,7 +40,7 @@ with open(pulse_json_path) as f:
 impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_scan_CSWFFT_Long.json")
+OUT_JSON = Path("threshold_scan_CSWFFT_10N_sections.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally

@@ -44,6 +44,7 @@ impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse
 OUT_JSON = Path("Full_threshold_scan_CSW_test_no_shifting.json")
 
 
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
 # ─────────────────────────────────────────────────────────────────────────────

@@ -31,7 +31,7 @@ COINC_NS            = SIMULATION_DURATION_NS
 SCAN_RATE           = 1000
 
 # ---- define a single CSW trigger value (you can change this) ----
-CSW_THRESHOLD =51.4   # <- “range of trigger of 5” interpreted as trigger value = 5
+CSW_THRESHOLD =20   # <- “range of trigger of 5” interpreted as trigger value = 5
 
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(60, 200, 15),
@@ -39,7 +39,7 @@ PULSE_AMPLITUDES = np.concatenate([
     np.arange(400, 550, 25)
 ])
 
-#PULSE_AMPLITUDES = np.array([300]*8)
+PULSE_AMPLITUDES = np.array([100])
 
 # ---------------- Load pulse and impulse response ----------------
 pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
@@ -58,7 +58,8 @@ pulse_time = pulse_time - pulse_time[0]  # Start from 0 ns
 # ---------------- Scan over amplitudes and build efficiency ----------------
 pass_fraction = []
 SNR_values = []
-
+delays_record_FFT= []
+delays_record_maxcorr = []
 #start benchmarking time
 start_time_benchmark = time.time()
 
@@ -97,7 +98,18 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
             threshold=CSW_THRESHOLD,
             noise_rms=NOISE_EQUALIZE # use your noise scale as RMS
         )
-        #_no_shifting  
+
+        triggers1 = ARA_CSW_trigger(
+            channel_signals,
+            time_axis,
+            threshold=CSW_THRESHOLD,
+            noise_rms=NOISE_EQUALIZE, # use your noise scale as RMS
+            STEP=2 
+        )
+
+        delays_record_maxcorr.append(triggers1[0]['Shifts'])
+        delays_record_FFT.append(triggers[0]['Shifts'])
+          
 
         if len(triggers) > 0:
             COINC += 1
@@ -111,30 +123,16 @@ end_time_benchmark = time.time()
 total_time_benchmark = end_time_benchmark - start_time_benchmark
 print(f"\nTotal benchmarking time: {total_time_benchmark:.2f} seconds")
 
-
-# ---------------- Sigmoid fit and plot ----------------
-def sigmoid(x, a, b):
-    return 1 / (1 + np.exp(-a * (x - b)))
-
-
-plt.figure(figsize=(10, 6))
-plt.plot(SNR_values, pass_fraction, marker='o', label='Pass Fraction vs SNR')
-
-#"""
-params, _ = curve_fit(sigmoid, SNR_values, pass_fraction, p0=[1, np.mean(SNR_values)])
-a, b = params
-pass_fraction_sigmoid = sigmoid(np.array(SNR_values), a, b)
-
-plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='Sigmoid Fit')
-plt.axhline(y=0.5, linestyle='--', label='50% Pass Threshold')
-plt.axvline(x=b, linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
-
-plt.title(f'ARA CSW Trigger Efficiency Scan (threshold={CSW_THRESHOLD})')
-plt.xlabel('SNR')
-plt.ylabel('Pass Fraction')
-plt.grid()
+# make a histogram that contains both FFT and maxcorr delays
+plt.figure(figsize=(10,6))
+plt.hist(np.array(delays_record_FFT).flatten(), bins=80, alpha=0.7, label='FFT-based CSW delays')
+plt.hist(np.array(delays_record_maxcorr).flatten(), bins=80, alpha=0.7, label='Max-corr CSW delays')
+plt.xlabel('Delay (samples)')
+plt.ylabel('Counts')
+plt.title('Histogram of CSW Trigger Delays at SNR ~ 1.0')
 plt.legend()
-plt.savefig(f"Trigger_eff_scan_CSW_threshold_{CSW_THRESHOLD:.2f}_FFT_5HzRate_10N.png")
+plt.grid()
+plt.savefig('CSW_trigger_delays_histogram_10.png')
 plt.show()
 
-print(f"\nSigmoid parameters: a = {a}, b = {b} (50% efficiency SNR), CSW threshold = {CSW_THRESHOLD}")
+
