@@ -20,16 +20,16 @@ from trig_functions_cop import *  # include CSW trigger definitions
 # ─────────────────────────────────────────────────────────────────────────────
 SAMPLING_RATE_GHZ         = 3.2
 TIME_STEP_NS              = 1.0 / SAMPLING_RATE_GHZ
-NOISE_RMS_ADC             = 100
+NOISE_RMS_ADC             = 30
 MAX_SIGNAL_ADC            = 4095
 WINDOW_SIZE_MHZ           = 5.88e6
 N_WINDOWS                 = 1
 SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
-N_CHANNELS                = 8
-SCAN_TIME_LIMIT_SEC       = 60*60*1   # 10 hours
-START_THRESHOLD            = 6        # CSW trigger threshold
-THRESHOLD_STEP             = 4
+N_CHANNELS                = 3
+SCAN_TIME_LIMIT_SEC       = 60*40 #*60   # 10 hours
+START_THRESHOLD            = 4        # CSW trigger threshold
+THRESHOLD_STEP             = 0.5
 TRIGGERS_PER_THRESHOLD     = 12
 
 # Input JSONs
@@ -40,7 +40,7 @@ with open(pulse_json_path) as f:
 impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_scan_CSWFFT_10N_sections.json")
+OUT_JSON = Path("threshold_scan_CSWFFT_3channels.json")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper to save results incrementally
@@ -96,11 +96,11 @@ def main():
                     channel_signals.append(noise)
 
                 # Apply CSW FFT trigger
-                triggers = ARA_CSW_trigger_FFT_optimized(
+                triggers = ARA_CSW_trigger_no_shifting(
                     channel_signals,
                     t_axis,
                     threshold=threshold,
-                    noise_rms=NOISE_RMS_ADC,
+                    noise_rms=NOISE_RMS_ADC
                 )
 
                 num_events_scanned += 1

@@ -446,11 +446,11 @@ def ARA_CSW_trigger_no_shifting(
     aligned = X
     # --- coherent sum across channels, then power trace and total event power ---
     s = np.sum(aligned, axis=0)  # coherent sum
-    csw_power_trace = s * s
+    csw_power_trace = np.abs(s)  ###JUST AS A TEST!!! NOT ACCURATE
     
     
     # --- effective threshold ---
-    power_threshold = float(thr *(sigma_n**2))
+    power_threshold = float(thr *(sigma_n))
     """
     
     plt.figure(figsize=(10, 6))
@@ -468,7 +468,7 @@ def ARA_CSW_trigger_no_shifting(
         return []
 
     # Report ONE trigger: center time after alignment
-    t_center = float(t[mid])
+    t_center = 0
     fired_channels = list(range(n_ch))
     return [{
         "t_trigger": t_center,
