@@ -1,0 +1,136 @@
+{
+  "input_json": "threshold_CSW_segments_short_scan.json",
+  "event_ns": 170.0,
+  "target_hz": 5.0,
+  "fit_start_candidates": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "meta_from_scan_file": {
+    "created_utc": "2026-01-14T15:42:05Z",
+    "script": "Full_CSW_segments_scan.py",
+    "simulation_parameters": {
+      "SAMPLING_RATE_GHZ": 3.2,
+      "TIME_STEP_NS": 0.3125,
+      "NOISE_RMS_ADC": 100,
+      "MAX_SIGNAL_ADC": 4095,
+      "WINDOW_SIZE_MHZ": 5880000.0,
+      "N_WINDOWS": 1,
+      "SIM_DURATION_NS": 170.06802721088437,
+      "SIM_DURATION_SAMPLES": 544,
+      "N_CHANNELS": 8,
+      "SCAN_TIME_LIMIT_SEC": 60,
+      "START_THRESHOLD": 4,
+      "THRESHOLD_STEP": 0.5,
+      "TRIGGERS_PER_THRESHOLD": 12,
+      "N_SEGMENTS_LIST": [
+        1,
+        2,
+        4,
+        6,
+        10,
+        14,
+        18
+      ]
+    },
+    "inputs": {
+      "pulse_json_path": "/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/ARA_event_based_simulation_V3/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json",
+      "impulse_response_path": "/home/shams/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/ARA_event_based_simulation_V3/jsons/new_impulse_response_ARA_event_based_simulation_V2.json",
+      "impulse_channel_key": "ch2_2x_amp"
+    },
+    "trigger": {
+      "function": "ARA_CSW_trigger_FFT_optimized",
+      "notes": "Noise-only scans; each record reports trigger_rate = num_triggers/num_events_scanned."
+    }
+  },
+  "results": {
+    "1": {
+      "status": "ok",
+      "num_points_total": 20,
+      "fit_start_threshold": 5.0,
+      "A": 54512381055288.59,
+      "k": -1.5073831342691704,
+      "chi2": 52.409368769657235,
+      "ndof": 5,
+      "chi2_reduced": 10.481873753931447,
+      "threshold_at_target_hz": 19.9153157363966,
+      "threshold_at_target_hz_err": 0.4446525722896212
+    },
+    "2": {
+      "status": "ok",
+      "num_points_total": 27,
+      "fit_start_threshold": 5.0,
+      "A": 80123647722.49571,
+      "k": -0.8088178568401281,
+      "chi2": 43.566718231344964,
+      "ndof": 10,
+      "chi2_reduced": 4.356671823134496,
+      "threshold_at_target_hz": 29.051533375278723,
+      "threshold_at_target_hz_err": 0.6857269591312753
+    },
+    "4": {
+      "status": "ok",
+      "num_points_total": 35,
+      "fit_start_threshold": 5.0,
+      "A": 1165754117.9233615,
+      "k": -0.42314553293532464,
+      "chi2": 67.46565001180741,
+      "ndof": 15,
+      "chi2_reduced": 4.497710000787161,
+      "threshold_at_target_hz": 45.533261287154644,
+      "threshold_at_target_hz_err": 1.2126729175238204
+    },
+    "6": {
+      "status": "ok",
+      "num_points_total": 41,
+      "fit_start_threshold": 5.0,
+      "A": 925865871.8481594,
+      "k": -0.36333696667778625,
+      "chi2": 43.68878722201513,
+      "ndof": 19,
+      "chi2_reduced": 2.29940985379027,
+      "threshold_at_target_hz": 52.39434400780633,
+      "threshold_at_target_hz_err": 1.2466023801093984
+    },
+    "10": {
+      "status": "ok",
+      "num_points_total": 51,
+      "fit_start_threshold": 5.0,
+      "A": 564884962.6471378,
+      "k": -0.27610020530886525,
+      "chi2": 76.25969921489386,
+      "ndof": 25,
+      "chi2_reduced": 3.0503879685957545,
+      "threshold_at_target_hz": 67.15929359512309,
+      "threshold_at_target_hz_err": 1.7660328936448344
+    },
+    "14": {
+      "status": "ok",
+      "num_points_total": 60,
+      "fit_start_threshold": 5.0,
+      "A": 174184063.3471598,
+      "k": -0.19392949269249682,
+      "chi2": 61.54194479060125,
+      "ndof": 32,
+      "chi2_reduced": 1.923185774706289,
+      "threshold_at_target_hz": 89.54896431609953,
+      "threshold_at_target_hz_err": 2.2434124260157113
+    },
+    "18": {
+      "status": "ok",
+      "num_points_total": 68,
+      "fit_start_threshold": 5.0,
+      "A": 168303534.17680103,
+      "k": -0.17130308454012902,
+      "chi2": 129.46165277212094,
+      "ndof": 36,
+      "chi2_reduced": 3.596157021447804,
+      "threshold_at_target_hz": 101.17647205421056,
+      "threshold_at_target_hz_err": 2.3967542775040775
+    }
+  }
+}

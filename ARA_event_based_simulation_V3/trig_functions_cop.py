@@ -480,7 +480,8 @@ def ARA_CSW_trigger_FFT_optimized(
     time_axis,
     *,
     threshold,
-    noise_rms
+    noise_rms,
+    N_segments=10
 ):
 
        # --- inputs -> arrays ---
@@ -540,7 +541,7 @@ def ARA_CSW_trigger_FFT_optimized(
     #peak_power = np.max(csw_power)
 
     #divide the csw power into 20 sections, and taking the mean of the sections
-    csw_power_sections = np.array_split(csw_power, 10)
+    csw_power_sections = np.array_split(csw_power, N_segments)
     peak_power = np.max([np.mean(section) for section in csw_power_sections])
     
     power_threshold = float(thr * (sigma_n ** 2)) 

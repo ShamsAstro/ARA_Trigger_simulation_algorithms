@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 from scipy.optimize import curve_fit
 from sim_functions import *
-from trig_functions import *
+#from trig_functions import *
 from trig_functions_cop import *  # include CSW trigger definitions
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -100,7 +100,8 @@ def main():
                     channel_signals,
                     t_axis,
                     threshold=threshold,
-                    noise_rms=NOISE_RMS_ADC
+                    noise_rms=NOISE_RMS_ADC,
+                    N_segments=10
                 )
 
                 num_events_scanned += 1
