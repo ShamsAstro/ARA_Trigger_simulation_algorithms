@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # ----------------- CONFIG -----------------
-IN_JSON_A = Path("threshold_scan_rates_2h_scan.json")
-IN_JSON_B = Path("Full_threshold_scan_full_4env_ARA_data.json")
+IN_JSON_A = Path("Full_threshold_scan_long_ARA_data.json")
+IN_JSON_B = Path("Full_threshold_scan_full_test.json")
 
 labelA = "PURE noise"
 EVENT_NS = 170.0            # ns
@@ -17,7 +17,7 @@ FIT_START_THRESHOLD_B = 27000
 X_axis_start = 10000
 Y_axis_end = 1e10
 
-OUT_DIR = Path("plots_tot_4env_full_scan")
+OUT_DIR = Path("plots_tot_4env_full_scans")
 OUT_DIR.mkdir(exist_ok=True)
 
 # ------------------------------------------

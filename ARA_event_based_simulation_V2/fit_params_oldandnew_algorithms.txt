@@ -1,0 +1,7 @@
+NEW CSW FFT
+Sigmoid parameters: a = 10.718979305764995, b = 1.7438539445873382 (50% efficiency SNR), CSW threshold = 51.4
+
+
+OLD/Current ARA trigger Algorithm
+Sigmoid parameters: a = 7.7603860683716706, b = 2.4598937591794923 (50% efficiency SNR), THRESHOLD_V = 71727
+

@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # ----------------- CONFIG -----------------
-IN_JSON = Path("threshold_scan_CSWFFT_3channels.json")
+IN_JSON = Path("threshold_scan_rates_2h_scan.json")
 
 EVENT_NS = 170.0           # event duration in ns (≈ 1 / 5.88 MHz)
-TARGET_HZ = 5.0            # target trigger rate
-FIT_START_THRESHOLD = 7 # choose where the exponential behavior starts
+TARGET_HZ = 2.5 #5.0            # target trigger rate
+FIT_START_THRESHOLD = 42000 # choose where the exponential behavior starts
 
-OUT_PNG = Path("trigger_rate_CSW_FFT_3ch.png")
+OUT_PNG = Path("Full_threshold_scan_long_ARA_data_test_modified_5Hz.png")
 
 # ------------------------------------------
 
@@ -60,6 +60,7 @@ def main():
     print(f"Loaded {len(results)} entries from {IN_JSON}")
     # Extract arrays
     thresholds = np.array([r["threshold"] for r in results], dtype=float)
+    
     # Ensure sorted by threshold
     order = np.argsort(thresholds)
     thresholds = thresholds[order]
@@ -105,7 +106,7 @@ def main():
     plt.yscale("log")  # log only on y
     plt.xlabel("Threshold (ADC²)")
     plt.ylabel("Trigger rate (Hz, log scale)")
-    plt.title("Trigger Rate vs Threshold (pure noise) simple CSW 3 channel Trigger")
+    plt.title("Trigger Rate vs Threshold (pure noise)")
     plt.grid(True, which="both", alpha=0.3)
     plt.legend()
     plt.tight_layout()

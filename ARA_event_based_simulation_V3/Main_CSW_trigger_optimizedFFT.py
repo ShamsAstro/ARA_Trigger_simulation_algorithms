@@ -17,33 +17,27 @@ from trig_functions_cop import *
 from scipy.signal import fftconvolve
 
 
-SAMPLING_RATE       = 4                     # GHz
+SAMPLING_RATE       = 3.2                      # GHz
 TIME_STEP           = 1.0 / SAMPLING_RATE      # ns
-NOISE_RMS_ADC      = 30                      # ADC (use as noise_rms)
+NOISE_EQUALIZE      = 100                      # ADC (use as noise_rms)
 MAX_SIGNAL          = 4095                     # ADC
-WINDOW_SIZE         = 5.88*1e6                 #16.4 micro_sec
+WINDOW_SIZE         = 5.88*1e6                 # MHz (name kept from your script)
 n_of_windows        = 1
 SIMULATION_DURATION_NS = n_of_windows/(WINDOW_SIZE) * 1e9  # ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)
-N_of_channels       = 3
+N_of_channels       = 8
 N_REQ               = 1                        # not needed for CSW, but kept
 COINC_NS            = SIMULATION_DURATION_NS
-SCAN_RATE           = 200
+SCAN_RATE           = 1000
 
 # ---- define a single CSW trigger value (you can change this) ----
-threshold =10.6  # <- “range of trigger of 5” interpreted as trigger value = 5
-"""
+CSW_THRESHOLD =51.4   # <- “range of trigger of 5” interpreted as trigger value = 5
+
 PULSE_AMPLITUDES = np.concatenate([
     np.arange(60, 200, 15),
-    np.arange(200, 400, 15),
+    np.arange(200, 400, 10),
     np.arange(400, 550, 25)
 ])
-"""
-PULSE_AMPLITUDES = np.concatenate([
-    np.arange(10, 200, 10),
-    np.arange(200, 300, 20)
-])
-
 
 #PULSE_AMPLITUDES = np.array([300]*8)
 
@@ -81,7 +75,7 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
                 impulse_json_path=impulse_response_path,
                 SIMULATION_DURATION_NS=SIMULATION_DURATION_NS,
                 SAMPLING_RATE=SAMPLING_RATE,
-                NOISE_EQUALIZE=NOISE_RMS_ADC,
+                NOISE_EQUALIZE=NOISE_EQUALIZE,
                 pulse_voltage=pulse_voltage,
                 pulse_time=pulse_time,
                 time_step=TIME_STEP,
@@ -94,15 +88,15 @@ for run, run_pulse_amplitude in enumerate(PULSE_AMPLITUDES):
         time_axis = t + time_start
 
         # SNR definition consistent with your code
-        SNR = run_pulse_amplitude / NOISE_RMS_ADC
+        SNR = run_pulse_amplitude / NOISE_EQUALIZE
 
         # ---------- CSW trigger decision ----------
-        triggers = ARA_CSW_trigger_no_shifting(
-                    channel_signals,
-                    time_axis,
-                    threshold=threshold,
-                    noise_rms=NOISE_RMS_ADC
-                )
+        triggers = ARA_CSW_trigger_FFT_optimized(
+            channel_signals,
+            time_axis,
+            threshold=CSW_THRESHOLD,
+            noise_rms=NOISE_EQUALIZE # use your noise scale as RMS
+        )
         #_no_shifting  
 
         if len(triggers) > 0:
@@ -135,12 +129,12 @@ plt.plot(SNR_values, pass_fraction_sigmoid, marker='x', linestyle='--', label='S
 plt.axhline(y=0.5, linestyle='--', label='50% Pass Threshold')
 plt.axvline(x=b, linestyle='--', label='50% eff SNR at {:.2f}'.format(b))
 
-plt.title(f'ARA CSW Trigger Efficiency Scan 3 channels (threshold={threshold})')
+plt.title(f'ARA CSW Trigger Efficiency Scan (threshold={CSW_THRESHOLD})')
 plt.xlabel('SNR')
 plt.ylabel('Pass Fraction')
 plt.grid()
 plt.legend()
-plt.savefig(f"Trigger_eff_scan_CSW_threshold_{threshold:.2f}_FFT_3ch.png")
+plt.savefig(f"Trigger_eff_scan_CSW_threshold_{CSW_THRESHOLD:.2f}_FFT_5HzRate_10N.png")
 plt.show()
 
-print(f"\nSigmoid parameters: a = {a}, b = {b} (50% efficiency SNR), CSW threshold = {threshold}")
+print(f"\nSigmoid parameters: a = {a}, b = {b} (50% efficiency SNR), CSW threshold = {CSW_THRESHOLD}")

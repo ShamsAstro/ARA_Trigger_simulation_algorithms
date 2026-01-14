@@ -1,0 +1,24 @@
+at 5HZ
+
+EVENT_NS = 170.0           # event duration in ns (≈ 1 / 5.88 MHz)
+TARGET_HZ = 5.0            # target trigger rate
+FIT_START_THRESHOLD = 42000 # choose where the exponential behavior starts
+threshold is: 71726.7
+
+
+at 2.5HZ
+
+EVENT_NS = 170.0           # event duration in ns (≈ 1 / 5.88 MHz)
+TARGET_HZ = 2.5            # target trigger rate
+FIT_START_THRESHOLD = 42000 # choose where the exponential behavior starts
+threshold is: 73296.5
+
+
+Result:
+
+in_trigger_efficiency_scan.py
+ Progress: 30/30 completedSigmoid parameters: a = 8.698198161342026, b = 2.4627504531852007 (50% efficiency SNR), THRESHOLD_V = 71726.7
+shams@AstroSHAMS:~/ARA_simulation_algorithms/ARA_Trigger_simulation_algorithms/ARA_event_based_simulation_V2$ python3 Main_trigger_efficiency_scan.py
+ Progress: 30/30 completedSigmoid parameters: a = 9.13139792787085, b = 2.495022086514192 (50% efficiency SNR), THRESHOLD_V = 73296.5
+
+ First result is at 5Hz rate, the second is at 2.5Hz
