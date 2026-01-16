@@ -9,10 +9,10 @@ from scipy.optimize import curve_fit
 # ─────────────────────────────────────────────────────────────────────────────
 IN_JSON = Path("performance_CSW_trigger_results.json")
 
-OUT_DIR = Path("plots_CSW_SNR50_vs_Nsegments")
+OUT_DIR = Path("plots_CSW_SNR50_vs_Nsegments")   #"plots_CSW_SNR50_vs_Nsegments"
 OUT_DIR.mkdir(exist_ok=True)
 
-OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_Nsegments_CSW.png"
+OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_Nsegments_CSW.png" #SNR50_vs_Nsegments_CSW.png
 
 # If you want the error bar to be the FULL difference, set HALF_DIFF_ERROR=False
 HALF_DIFF_ERROR = True

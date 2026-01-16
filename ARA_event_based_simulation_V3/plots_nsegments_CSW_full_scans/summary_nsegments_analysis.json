@@ -66,15 +66,15 @@
   "results": {
     "1": {
       "status": "ok",
-      "num_points_total": 8,
-      "fit_start_threshold": 5.0,
-      "A": 2.857571953075279e+20,
-      "k": -2.7585696085362685,
-      "chi2": 30.525060023121856,
+      "num_points_total": 12,
+      "fit_start_threshold": 13.0,
+      "A": 6.720367415726243e+28,
+      "k": -4.152958993739051,
+      "chi2": 10.0954491742886,
       "ndof": 1,
-      "chi2_reduced": 30.525060023121856,
-      "threshold_at_target_hz": 16.491241005291926,
-      "threshold_at_target_hz_err": 0.1487134159311154
+      "chi2_reduced": 10.0954491742886,
+      "threshold_at_target_hz": 15.595648215415185,
+      "threshold_at_target_hz_err": 0.07863840702399195
     },
     "2": {
       "status": "ok",

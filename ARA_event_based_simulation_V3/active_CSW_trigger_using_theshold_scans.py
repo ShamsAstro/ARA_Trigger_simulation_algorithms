@@ -36,7 +36,7 @@ SIM_DURATION_NS = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9
 SIM_DURATION_SAMPLES = int(SIM_DURATION_NS / TIME_STEP_NS)
 
 N_CHANNELS = 8
-SCAN_RATE = 800  # number of events per amplitude
+SCAN_RATE = 500  # number of events per amplitude
 
 # Must match what you used when converting pass_fraction -> Hz in the analysis summary
 EVENT_NS = 170.0
@@ -44,9 +44,9 @@ TARGET_HZ = 5.0
 
 # Amplitude scan (same as your script)
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(60, 200, 15),
-    np.arange(200, 400, 10),
-    np.arange(400, 550, 25)
+    np.arange(60, 110, 10),
+    np.arange(110, 250, 6),
+    np.arange(400, 500, 45)
 ])
 
 # Input pulse / impulse response
