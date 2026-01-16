@@ -5,14 +5,14 @@ from pathlib import Path
 from collections import defaultdict
 
 # ----------------- CONFIG -----------------
-IN_JSON = Path("threshold_CSW_segments_short_scan.json")   # <-- your earlier scan JSON
+IN_JSON = Path("threshold_CSW_segments_full_scan.json")   # <-- your earlier scan JSON
 
 LABEL = "PURE noise (CSW FFT)"
 EVENT_NS = 170.0               # ns per event record
 TARGET_HZ = 5.0                # Hz target rate
 
 # Fit-start scan (in threshold units)
-FIT_START_CANDIDATES = list(range(5, 11, 1))  # 5..10 inclusive
+FIT_START_CANDIDATES = list(range(5, 40, 2))  # 5..10 inclusive
 
 # Plot controls
 X_AXIS_START = None            # set to a float if you want, else None
