@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "created_utc": "2026-01-16T02:27:01Z",
+    "script": "Full_CSW_segments_scan.py",
+    "simulation_parameters": {
+      "SAMPLING_RATE_GHZ": 3.2,
+      "TIME_STEP_NS": 0.3125,
+      "NOISE_RMS_ADC": 100,
+      "MAX_SIGNAL_ADC": 4095,
+      "WINDOW_SIZE_MHZ": 5880000.0,
+      "N_WINDOWS": 1,
+      "SIM_DURATION_NS": 170.06802721088437,
+      "SIM_DURATION_SAMPLES": 544,
+      "N_CHANNELS": 8,
+      "SCAN_TIME_LIMIT_SEC": 36000,
+      "START_THRESHOLD": 4,
+      "THRESHOLD_STEP": 1,
+      "TRIGGERS_PER_THRESHOLD": 15,
+      "N_SEGMENTS_LIST": [
+        1
+      ]
+    },
+    "inputs": {
+      "pulse_json_path": "/home/shamshassiki/ARA_event_based_trigger/ARA_Trigger_simulation_algorithms/ARA_event_based_simulation_V3/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json",
+      "impulse_response_path": "/home/shamshassiki/ARA_event_based_trigger/ARA_Trigger_simulation_algorithms/ARA_event_based_simulation_V3/jsons/new_impulse_response_ARA_event_based_simulation_V2.json",
+      "impulse_channel_key": "ch2_2x_amp"
+    },
+    "trigger": {
+      "function": "ARA_CSW_trigger_FFT_optimized",
+      "notes": "Noise-only scans; each record reports trigger_rate = num_triggers/num_events_scanned."
+    }
+  },
+  "results": [
+    {
+      "N_segments": 1,
+      "threshold": 4.0,
+      "num_triggers": 15,
+      "num_events_scanned": 15,
+      "trigger_rate": 1.0
+    },
+    {
+      "N_segments": 1,
+      "threshold": 5.0,
+      "num_triggers": 15,
+      "num_events_scanned": 15,
+      "trigger_rate": 1.0
+    },
+    {
+      "N_segments": 1,
+      "threshold": 6.0,
+      "num_triggers": 15,
+      "num_events_scanned": 15,
+      "trigger_rate": 1.0
+    },
+    {
+      "N_segments": 1,
+      "threshold": 7.0,
+      "num_triggers": 15,
+      "num_events_scanned": 15,
+      "trigger_rate": 1.0
+    },
+    {
+      "N_segments": 1,
+      "threshold": 8.0,
+      "num_triggers": 15,
+      "num_events_scanned": 15,
+      "trigger_rate": 1.0
+    },
+    {
+      "N_segments": 1,
+      "threshold": 9.0,
+      "num_triggers": 15,
+      "num_events_scanned": 15,
+      "trigger_rate": 1.0
+    },
+    {
+      "N_segments": 1,
+      "threshold": 10.0,
+      "num_triggers": 15,
+      "num_events_scanned": 15,
+      "trigger_rate": 1.0
+    },
+    {
+      "N_segments": 1,
+      "threshold": 11.0,
+      "num_triggers": 15,
+      "num_events_scanned": 18,
+      "trigger_rate": 0.8333333333333334
+    },
+    {
+      "N_segments": 1,
+      "threshold": 12.0,
+      "num_triggers": 15,
+      "num_events_scanned": 52,
+      "trigger_rate": 0.28846153846153844
+    },
+    {
+      "N_segments": 1,
+      "threshold": 13.0,
+      "num_triggers": 15,
+      "num_events_scanned": 509,
+      "trigger_rate": 0.029469548133595286
+    },
+    {
+      "N_segments": 1,
+      "threshold": 14.0,
+      "num_triggers": 15,
+      "num_events_scanned": 11950,
+      "trigger_rate": 0.0012552301255230125
+    },
+    {
+      "N_segments": 1,
+      "threshold": 15.0,
+      "num_triggers": 15,
+      "num_events_scanned": 2080798,
+      "trigger_rate": 7.208772788132245e-06
+    }
+  ]
+}
