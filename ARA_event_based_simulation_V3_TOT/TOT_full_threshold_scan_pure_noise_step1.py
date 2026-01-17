@@ -23,7 +23,7 @@ N_CHANNELS                = 8
 N_REQ_COINC               = 3        # channels required for a trigger
 
 # Per-TOT scan time limit
-SCAN_TIME_LIMIT_SEC       = 30     #3600 * 1.5
+SCAN_TIME_LIMIT_SEC       = 3600     #3600 * 1.5
 
 START_THRESHOLD           = 15000    # POWER units (ADC^2)
 THRESHOLD_STEP            = 1500
@@ -32,14 +32,14 @@ TRIGGERS_PER_THRESHOLD    = 15
 starting_MIN_ALLOWED_TOT  = 0        # samples
 ending_MIN_ALLOWED_TOT    = 10       # samples (inclusive)
 
-envelope_samples          = 10       # real experiment uses 10
+envelope_samples          = 4       # real experiment uses 10
 
 # Input JSONs
 pulse_json_path = Path("../ARA_event_based_simulation_V3_TOT/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
 impulse_response_path = Path("../ARA_event_based_simulation_V3_TOT/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 # Output
-OUT_JSON = Path("Full_threshold_scan_full_4env_ARA_data.json")
+OUT_JSON = Path("Full_threshold_scan_long_4env.json")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
