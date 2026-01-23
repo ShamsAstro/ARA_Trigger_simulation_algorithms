@@ -42,11 +42,11 @@ PULSE_AMPLITUDES = np.concatenate([
 #PULSE_AMPLITUDES = np.array([300]*8)
 
 # ---------------- Load pulse and impulse response ----------------
-pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
+pulse_json_path = Path("../ARA_event_based_simulation_V3/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
 with open(pulse_json_path) as f:
     pulse_data = json.load(f)
 
-impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
+impulse_response_path = Path("../ARA_event_based_simulation_V3/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 pulse_voltage = np.array(pulse_data['avg_wave'])
 pulse_time = np.array(pulse_data['t_axis_ns'])

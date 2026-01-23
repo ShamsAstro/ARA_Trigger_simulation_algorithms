@@ -34,12 +34,11 @@ CSW_corr_scan_step         = 3       # step for correlation scan in CSW trigger
 
 # Impulse-response JSON path (adjust if needed)
 # If you implemented caching in sim_functions, it will be used automatically.
-pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
+pulse_json_path = Path("../ARA_event_based_simulation_V3/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()
 with open(pulse_json_path) as f:
     pulse_data = json.load(f)
-    
-impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
+impulse_response_path = Path("../ARA_event_based_simulation_V3/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 # Output file
 OUT_JSON = Path("Full_threshold_scan_CSW_test_no_shifting.json")
 
