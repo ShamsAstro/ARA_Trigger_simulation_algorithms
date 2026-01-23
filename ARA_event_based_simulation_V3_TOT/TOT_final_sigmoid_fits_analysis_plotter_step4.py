@@ -7,9 +7,9 @@ from scipy.optimize import curve_fit
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-IN_JSON = Path("performance_TOT_trigger_results.json")
+IN_JSON = Path("performance_TOT_trigger_results_4env.json")
 
-OUT_DIR = Path("plots_TOT_efficiency_sigmoids")
+OUT_DIR = Path("plots_TOT_efficiency_sigmoids_4env")
 OUT_DIR.mkdir(exist_ok=True)
 
 OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_TOTmin.png"

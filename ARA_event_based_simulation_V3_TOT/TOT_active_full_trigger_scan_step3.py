@@ -10,8 +10,8 @@ from trig_functions import *
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG: input summary (from your TOT analysis) + output results (efficiency scans)
 # ─────────────────────────────────────────────────────────────────────────────
-SUMMARY_JSON = Path("TOT_threshold_analysis_outputs/summary_TOT_threshold_analysis.json")
-OUT_JSON = Path("performance_TOT_trigger_results.json")
+SUMMARY_JSON = Path("TOT_threshold_analysis_outputs_10env/summary_TOT_threshold_analysis_10env.json")
+OUT_JSON = Path("performance_TOT_trigger_results_10env.json")
 
 # Efficiency scan settings (template-style)
 SAMPLING_RATE_GHZ = 3.2
@@ -25,13 +25,13 @@ SIM_DURATION_SAMPLES = int(SIM_DURATION_NS / TIME_STEP_NS)
 
 N_CHANNELS = 8
 N_REQ = 3
-SCAN_RATE = 80
+SCAN_RATE = 600
 envelope_samples = 10
 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(100, 200, 25),
-    np.arange(200, 311, 10),
-    np.arange(340, 521, 40)
+    np.arange(100, 176, 25),
+    np.arange(185, 331, 10),
+    np.arange(355, 450, 40)
 ])
 
 # Pulse + impulse response (use your TOT-specific ones)

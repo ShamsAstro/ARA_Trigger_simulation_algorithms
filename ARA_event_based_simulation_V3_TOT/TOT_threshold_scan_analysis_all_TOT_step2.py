@@ -7,7 +7,7 @@ from pathlib import Path
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-IN_TOT_SCAN_JSON = Path("Full_threshold_scan_full_10env_ARA_data.json")
+IN_TOT_SCAN_JSON = Path("Full_threshold_scan_long_10env.json")
 
 EVENT_NS = 170.0
 TARGET_HZ = 5.0
@@ -15,10 +15,10 @@ TARGET_HZ = 5.0
 # Candidate fit-start thresholds (same units as your thresholds, ADC^2)
 FIT_START_CANDIDATES = list(range(20000, 50001, 2500))
 
-OUT_DIR = Path("TOT_threshold_analysis_outputs")
+OUT_DIR = Path("TOT_threshold_analysis_outputs_10env")
 OUT_DIR.mkdir(exist_ok=True)
 
-OUT_SUMMARY_JSON = OUT_DIR / "summary_TOT_threshold_analysis.json"
+OUT_SUMMARY_JSON = OUT_DIR / "summary_TOT_threshold_analysis_10env.json"
 
 # Plot limits (optional)
 X_AXIS_LEFT = None
