@@ -78,7 +78,7 @@ plt.xlim(0, 1)
 plt.title("Impulse Response for Channel 2 (2x Amplified)")
 plt.grid()
 plt.savefig("impulse_response_channel2_2x.png")
-
+"""
 
 #open new data
 new_impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/ARA_impulse_response.txt").resolve()
@@ -109,7 +109,7 @@ plt.grid()
 plt.savefig("new_impulse_response_ARA_event_based_simulation_V2.png")
 plt.close()
 
-"""
+
 
 
 
@@ -118,7 +118,7 @@ plt.close()
 
 
 
-"""
+
 """
 new_pulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/normalized_neutrino_waveform.txt").resolve()
 with open(new_pulse_response_path) as f:
@@ -149,6 +149,6 @@ plt.grid()
 plt.savefig("new_pulse_waveform_ARA_event_based_simulation_V2.png")
 
 
-
+"""
 
 

@@ -7,15 +7,15 @@ from scipy.optimize import curve_fit
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-IN_JSON = Path("performance_TOT_trigger_results_4env.json")
+IN_JSON = Path("performance_TOT_trigger_results_10env.json")
 
-OUT_DIR = Path("plots_TOT_efficiency_sigmoids_4env")
+OUT_DIR = Path("plots_TOT_efficiency_sigmoids_10env_new_plots")
 OUT_DIR.mkdir(exist_ok=True)
 
-OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_TOTmin.png"
+OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_TOTmin_10new.png"
 
 # Error bar definition for summary:
-# - If True: error = half difference between (+) and (-) SNR50
+# - If True: error = half difference between (+) and (-) SNR50W
 # - If False: error = full difference
 HALF_DIFF_ERROR = True
 # ─────────────────────────────────────────────────────────────────────────────
@@ -94,29 +94,29 @@ def plot_per_tot(min_tot, minus_scan, plus_scan, fit_m, fit_p):
 
     plt.figure(figsize=(10, 6))
 
-    plt.plot(snr_m, eff_m, "o", label=f"pred - err data (thr={thr_m:.0f})")
-    plt.plot(snr_p, eff_p, "o", label=f"pred + err data (thr={thr_p:.0f})")
+    plt.plot(snr_m, eff_m, "o", label=f"pred - err data (thr={thr_m:.0f})", alpha=0.7)
+    plt.plot(snr_p, eff_p, "o", label=f"pred + err data (thr={thr_p:.0f})", alpha=0.7)
 
     if fit_m["success"]:
         xg, yg = make_sigmoid_curve(fit_m["a"], fit_m["b"], snr_m)
-        plt.plot(xg, yg, "-", label=f"pred - err fit (SNR50={fit_m['b']:.3f})")
+        plt.plot(xg, yg, "-", label=f"pred - err fit (SNR$_{{50}}$={fit_m['b']:.3f})")
         plt.axvline(fit_m["b"], linestyle="--")
     if fit_p["success"]:
         xg, yg = make_sigmoid_curve(fit_p["a"], fit_p["b"], snr_p)
-        plt.plot(xg, yg, "-", label=f"pred + err fit (SNR50={fit_p['b']:.3f})")
+        plt.plot(xg, yg, "-", label=f"pred + err fit (SNR$_{{50}}$={fit_p['b']:.3f})")
         plt.axvline(fit_p["b"], linestyle="--")
 
     plt.axhline(0.5, linestyle="--", label="50% efficiency")
     plt.title(f"TOT trigger efficiency vs SNR (TOT≥{min_tot})\nTwo thresholds: predicted ± error")
-    plt.xlabel("SNR")
-    plt.ylabel("Pass fraction")
+    plt.xlabel("SNR", fontsize=15)
+    plt.ylabel("Pass fraction", fontsize=15)
     plt.ylim(-0.02, 1.02)
     plt.grid(True, alpha=0.3)
-    plt.legend()
+    plt.legend(fontsize=11)
     plt.tight_layout()
 
     out_file = OUT_DIR / f"efficiency_sigmoid_TOT_{int(min_tot):02d}.png"
-    plt.savefig(out_file)
+    plt.savefig(out_file, dpi=300)
     plt.close()
 
 
@@ -177,8 +177,9 @@ def main():
 
     plt.figure(figsize=(10, 6))
     plt.errorbar(tot, snr50_mean, yerr=snr50_err, fmt="o", capsize=3)
-    plt.xlabel("Minimum allowed TOT (samples)")
-    plt.ylabel("SNR at 50% efficiency (SNR_50)")
+    plt.plot(tot, snr50_mean, "-", alpha=0.7)
+    plt.xlabel("Minimum allowed TOT (samples)", fontsize=14)
+    plt.ylabel("SNR_50", fontsize=14)
     err_note = "half-difference" if HALF_DIFF_ERROR else "full difference"
     plt.title(f"TOT trigger: SNR_50 vs minimum TOT\n(mean of +/- threshold cases, error = {err_note})")
     plt.grid(True, alpha=0.3)

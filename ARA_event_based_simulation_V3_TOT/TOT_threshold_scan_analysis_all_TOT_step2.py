@@ -7,7 +7,7 @@ from pathlib import Path
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-IN_TOT_SCAN_JSON = Path("Full_threshold_scan_long_10env.json")
+IN_TOT_SCAN_JSON = Path("Full_threshold_scan_long_4env.json")
 
 EVENT_NS = 170.0
 TARGET_HZ = 5.0
@@ -15,15 +15,15 @@ TARGET_HZ = 5.0
 # Candidate fit-start thresholds (same units as your thresholds, ADC^2)
 FIT_START_CANDIDATES = list(range(20000, 50001, 2500))
 
-OUT_DIR = Path("TOT_threshold_analysis_outputs_10env")
+OUT_DIR = Path("TOT_threshold_analysis_outputs_4env_new_plots")
 OUT_DIR.mkdir(exist_ok=True)
 
-OUT_SUMMARY_JSON = OUT_DIR / "summary_TOT_threshold_analysis_10env.json"
+OUT_SUMMARY_JSON = OUT_DIR / "summary_TOT_threshold_analysis_4env.json"
 
 # Plot limits (optional)
 X_AXIS_LEFT = None
 X_AXIS_RIGHT = None
-Y_AXIS_TOP = 1e10
+Y_AXIS_TOP = 1e9
 Y_AXIS_BOTTOM = None
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -297,6 +297,8 @@ def plot_combined(all_series, out_dir: Path):
         sig = s["sig"]
         fit = s["best_fit"]
         thr_pred = s["thr_pred"]
+        # choose a color based on tot
+        color_choice = plt.get_cmap("tab10")(tot % 10)
 
         pos = (rate > 0) & np.isfinite(rate) & np.isfinite(sig)
         plt.errorbar(
@@ -311,19 +313,30 @@ def plot_combined(all_series, out_dir: Path):
             xmax = float(np.max(thr[pos])) if np.any(pos) else float(np.max(thr))
             if thr_pred is not None and np.isfinite(thr_pred):
                 xmax = max(xmax, float(thr_pred))
-            span = max(1.0, xmax - xmin)
-            xg, yg = make_fit_curve(A, k, xmin, xmax + 0.1 * span)
-            plt.plot(xg, yg, lw=1.5, alpha=0.8)
+                span = max(1.0, xmax - xmin)
+                xg, yg = make_fit_curve(A, k, xmin, xmax + 0.1 * span)
+                fit_start = fit["fit_start_threshold"]
+                last_data = float(np.max(thr[pos])) if np.any(pos) else float(np.max(thr))
+                
+                # Dotted line for extrapolated regions (before fit start and after last data)
+                mask_extrap = (xg < fit_start) | (xg > last_data)
+                plt.plot(xg[mask_extrap], yg[mask_extrap], color=color_choice, lw=1.5, alpha=0.9, linestyle="--")
 
-        if thr_pred is not None and np.isfinite(thr_pred):
-            plt.scatter([float(thr_pred)], [TARGET_HZ], s=25, alpha=0.9)
+                # Full line for fitted region (from fit_start to last_data)
+                mask_fitted = (xg >= fit_start) & (xg <= last_data)
+                plt.plot(xg[mask_fitted], yg[mask_fitted], color=color_choice, lw=1.5, alpha=0.9)
+                
+                
+            if thr_pred is not None and np.isfinite(thr_pred):
+                plt.scatter([float(thr_pred)], [TARGET_HZ], s=40, alpha=0.9, color=color_choice, marker="X")
+
 
     plt.yscale("log")
-    plt.xlabel("Threshold (ADC²)")
-    plt.ylabel("Trigger rate (Hz, log scale)")
+    plt.xlabel("Threshold (ADC²)", fontsize=14)
+    plt.ylabel("Trigger rate (Hz, log scale)", fontsize=14)
     plt.title("Trigger Rate vs Threshold — all TOT eliminations (data + fits + 5 Hz intersections)")
     plt.grid(True, which="both", alpha=0.3)
-    plt.legend(ncol=2, fontsize=8)
+    plt.legend(ncol=3, fontsize=14)
 
     if X_AXIS_LEFT is not None or X_AXIS_RIGHT is not None:
         plt.xlim(left=X_AXIS_LEFT, right=X_AXIS_RIGHT)
@@ -332,7 +345,7 @@ def plot_combined(all_series, out_dir: Path):
 
     out_file = out_dir / "compare_all_TOT.png"
     plt.tight_layout()
-    plt.savefig(out_file)
+    plt.savefig(out_file, dpi=300)
     plt.close()
 
 
