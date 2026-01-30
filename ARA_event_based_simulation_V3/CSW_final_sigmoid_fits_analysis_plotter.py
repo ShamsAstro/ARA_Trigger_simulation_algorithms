@@ -9,10 +9,10 @@ from scipy.optimize import curve_fit
 # ─────────────────────────────────────────────────────────────────────────────
 IN_JSON = Path("performance_CSW_trigger_results.json")
 
-OUT_DIR = Path("plots_CSW_SNR50_vs_Nsegments")   #"plots_CSW_SNR50_vs_Nsegments"
+OUT_DIR = Path("plots_CSW_SNR50_vs_Nsegments_new_plots")   #"plots_CSW_SNR50_vs_Nsegments"
 OUT_DIR.mkdir(exist_ok=True)
 
-OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_Nsegments_CSW.png" #SNR50_vs_Nsegments_CSW.png
+OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_Nsegments_CSW_new_plots.png" #SNR50_vs_Nsegments_CSW.png
 
 # If you want the error bar to be the FULL difference, set HALF_DIFF_ERROR=False
 HALF_DIFF_ERROR = True
@@ -74,41 +74,51 @@ def make_sigmoid_curve(a, b, snr):
 def save_per_nseg_plot(nseg, minus_scan, plus_scan, fit_m, fit_p):
     """
     Plot pass_fraction vs SNR for both minus and plus cases with sigmoid fits.
+    Styled to match plot_per_tot().
     """
     snr_m = np.asarray(minus_scan["SNR_values"], dtype=float)
     eff_m = np.asarray(minus_scan["pass_fraction"], dtype=float)
     snr_p = np.asarray(plus_scan["SNR_values"], dtype=float)
     eff_p = np.asarray(plus_scan["pass_fraction"], dtype=float)
 
+    thr_m = float(minus_scan.get("threshold_used", np.nan))
+    thr_p = float(plus_scan.get("threshold_used", np.nan))
+
     plt.figure(figsize=(10, 6))
 
-    # data
-    plt.plot(snr_m, eff_m, "o", label="pred - err (data)")
-    plt.plot(snr_p, eff_p, "o", label="pred + err (data)")
+    # data (match TOT style: alpha=0.7, threshold in legend)
+    plt.plot(snr_m, eff_m, "o", label=f"pred - err data ", alpha=0.7)
+    plt.plot(snr_p, eff_p, "o", label=f"pred + err data ", alpha=0.7)
 
-    # fits
+    # fits (match TOT style text + vertical lines)
     if fit_m["success"]:
         xg, yg = make_sigmoid_curve(fit_m["a"], fit_m["b"], snr_m)
-        plt.plot(xg, yg, "-", label=f"pred - err fit (SNR50={fit_m['b']:.3f})")
+        plt.plot(xg, yg, "-", label=f"pred - err fit (SNR$_{{50}}$={fit_m['b']:.3f})")
         plt.axvline(fit_m["b"], linestyle="--")
     if fit_p["success"]:
         xg, yg = make_sigmoid_curve(fit_p["a"], fit_p["b"], snr_p)
-        plt.plot(xg, yg, "-", label=f"pred + err fit (SNR50={fit_p['b']:.3f})")
+        plt.plot(xg, yg, "-", label=f"pred + err fit (SNR$_{{50}}$={fit_p['b']:.3f})")
         plt.axvline(fit_p["b"], linestyle="--")
 
     plt.axhline(0.5, linestyle="--", label="50% efficiency")
 
-    plt.title(f"CSW efficiency vs SNR (N_segments={nseg})")
-    plt.xlabel("SNR")
-    plt.ylabel("Pass fraction")
+    # titles/labels (match TOT style fonts + two-line title structure)
+    plt.title(
+        f"CSW trigger efficiency vs SNR (N_segments={nseg})\n"
+        f"Two thresholds: predicted ± error"
+    )
+    plt.xlabel("SNR", fontsize=15)
+    plt.ylabel("Pass fraction", fontsize=15)
     plt.ylim(-0.02, 1.02)
+    plt.xlim(0.3, 3.1)
     plt.grid(True, alpha=0.3)
-    plt.legend()
+    plt.legend(fontsize=11)
     plt.tight_layout()
 
     out_file = OUT_DIR / f"efficiency_sigmoid_Nsegments_{int(nseg):02d}.png"
-    plt.savefig(out_file)
+    plt.savefig(out_file, dpi=300)
     plt.close()
+
 
 
 def main():
@@ -177,22 +187,51 @@ def main():
         raise RuntimeError("No valid (minus, plus) sigmoid fits found to plot.")
 
     # Comprehensive plot: SNR50 vs N_segments
+    # Comprehensive plot: SNR50 vs N_segments (TOT-style)
     rows = sorted(rows, key=lambda t: t[0])
     nseg = np.array([r[0] for r in rows], dtype=float)
+    time_duration = 170.0 / nseg  # ns per segment
     snr50_mean = np.array([r[3] for r in rows], dtype=float)
     snr50_err = np.array([r[4] for r in rows], dtype=float)
 
-    plt.figure(figsize=(10, 6))
-    plt.errorbar(nseg, snr50_mean, yerr=snr50_err, fmt="o", capsize=3)
-    plt.xlabel("N_segments")
-    plt.xticks(nseg.astype(int))
-    plt.ylabel("SNR at 50% efficiency (SNR_50)")
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    ax.errorbar(
+        nseg, snr50_mean, yerr=snr50_err,
+        fmt="o", capsize=3, color="royalblue",
+        label="SNR$_{50}$ (mean ± error)"
+    )
+    ax.plot(nseg, snr50_mean, "--", alpha=0.7, color="royalblue")
+    ax.legend(fontsize=14)
+
+    ax.set_xlabel("Number of CSW segments ", fontsize=14)
+    #x ticks as integers
+    ax.set_xticks(nseg)
+
+    ax.set_ylabel("SNR$_{50}$", fontsize=14)
+
     err_note = "half-difference" if HALF_DIFF_ERROR else "full difference"
-    plt.title(f"CSW: SNR_50 vs N_segments")
-    plt.grid(True, alpha=0.3)
+    ax.set_title("CSW trigger: SNR_50 vs N_segments\n")
+    ax.grid(True, alpha=0.3)
+
+    # ---------- TOP AXIS: time per segment ----------
+    ax_top = ax.twiny()
+    ax_top.set_xlim(ax.get_xlim())
+    ax_top.set_xticks(nseg)
+    ax_top.set_xticklabels([f"{t:.1f}" for t in time_duration])
+    ax_top.set_xlabel("CSW segment duration (ns)", fontsize=13)
+
+    ax_top.margins(x=0.05)
+
+
     plt.tight_layout()
-    plt.savefig(OUT_COMPREHENSIVE)
+    plt.savefig(OUT_COMPREHENSIVE, dpi=300)
     plt.close()
+
+
+
+
+
 
     print(f"\nSaved per-N_segments sigmoid plots to: {OUT_DIR}")
     print(f"Saved comprehensive plot: {OUT_COMPREHENSIVE}")

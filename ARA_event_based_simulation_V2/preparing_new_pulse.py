@@ -78,7 +78,7 @@ plt.xlim(0, 1)
 plt.title("Impulse Response for Channel 2 (2x Amplified)")
 plt.grid()
 plt.savefig("impulse_response_channel2_2x.png")
-"""
+
 
 #open new data
 new_impulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/ARA_impulse_response.txt").resolve()
@@ -101,25 +101,24 @@ with open(new_impulse_response_json_path, 'w') as f:
 
 
 plt.plot(freqs, amplitudes)
-plt.xlabel("Frequency (GHz)")
-plt.ylabel("Amplitude")
+plt.xlabel("Frequency (GHz)", fontsize=14)
+plt.ylabel("Amplitude", fontsize=14)
 plt.xlim(0, 1)
 plt.title("New Impulse Response from ARA_event_based_simulation_V2")
 plt.grid()
-plt.savefig("new_impulse_response_ARA_event_based_simulation_V2.png")
+plt.savefig("new_impulse_response_ARA_event_based_simulation_V22.png", dpi=300)
 plt.close()
+print("done!")
 
 
-
-
-
+"""
 
 #FFT the times to freauency 
 
 
 
 
-"""
+
 new_pulse_response_path = Path("../ARA_event_based_simulation_V2/jsons/normalized_neutrino_waveform.txt").resolve()
 with open(new_pulse_response_path) as f:
     lines = f.readlines()
@@ -142,13 +141,12 @@ time_ns = time_ns - time_ns[0] + 450
 
 
 plt.plot(time_ns, voltages)
-plt.xlabel("Time (ns)")
-plt.ylabel("Normalized Voltage")
+plt.xlabel("Time (ns)", fontsize=14)
+plt.ylabel("Normalized Voltage", fontsize=14)
 plt.title("New Pulse Waveform from ARA_event_based_simulation_V2")
 plt.grid()
-plt.savefig("new_pulse_waveform_ARA_event_based_simulation_V2.png")
+plt.savefig("new_pulse_waveform_ARA_event_based_simulation_V22.png", dpi=300)
 
 
-"""
 
 

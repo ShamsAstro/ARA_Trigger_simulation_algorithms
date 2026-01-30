@@ -246,12 +246,12 @@ def plot_channels_signals(time_axis, channel_signals, title="8 Channels Signals"
         plt.plot(time_axis, signal, label=f'Channel {ch}')
     
     plt.title(title)
-    plt.xlabel('Time (ns)')
-    plt.ylabel('Amplitude (ADC counts)')
-    plt.legend()
+    plt.xlabel('Time (ns)', fontsize=18)
+    plt.ylabel('Amplitude (ADC counts)', fontsize=18)
+    plt.legend(fontsize=12)
     plt.grid()
     full_title = f"{title} - {int(time_axis[0])} ns to {int(time_axis[-1])} ns"
-    plt.savefig(f"{full_title}.png")
+    plt.savefig(f"{full_title}.png", dpi=300)
     plt.close()
 
 def make_full_signal_angle(impulse_json_path, SIMULATION_DURATION_NS, SAMPLING_RATE, NOISE_EQUALIZE,

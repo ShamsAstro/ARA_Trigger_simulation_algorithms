@@ -1,5 +1,6 @@
 {
   "input_json": "threshold_CSW_segments_full_scan.json",
+  "label": "PURE noise (CSW)",
   "event_ns": 170.0,
   "target_hz": 5.0,
   "fit_start_candidates": [
@@ -62,6 +63,18 @@
       "function": "ARA_CSW_trigger_FFT_optimized",
       "notes": "Noise-only scans; each record reports trigger_rate = num_triggers/num_events_scanned."
     }
+  },
+  "field_mapping": {
+    "threshold_key": "threshold",
+    "trigger_keys": [
+      "num_triggers",
+      "triggers"
+    ],
+    "event_keys": [
+      "num_events_scanned",
+      "events"
+    ],
+    "group_key": "N_segments"
   },
   "results": {
     "1": {
