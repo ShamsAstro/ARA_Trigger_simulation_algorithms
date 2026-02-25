@@ -27,7 +27,7 @@ N_WINDOWS                 = 1
 SIM_DURATION_NS           = N_WINDOWS / WINDOW_SIZE_MHZ * 1e9
 SIM_DURATION_SAMPLES      = int(SIM_DURATION_NS / TIME_STEP_NS)
 N_CHANNELS                = 8
-SCAN_TIME_LIMIT_SEC       = 60*60*10   #*60   # 10 hours
+SCAN_TIME_LIMIT_SEC       = 60*60*1.5   #*60   # 10 hours
 START_THRESHOLD            = 4        # CSW trigger threshold
 THRESHOLD_STEP             = 1
 TRIGGERS_PER_THRESHOLD     = 15
@@ -40,10 +40,10 @@ with open(pulse_json_path) as f:
 impulse_response_path = Path("../ARA_event_based_simulation_V3/jsons/new_impulse_response_ARA_event_based_simulation_V2.json").resolve()
 
 # Output file
-OUT_JSON = Path("threshold_CSW_segments_N_1segment_scan.json")
+OUT_JSON = Path("threshold_CSW_segments_N_segment_ODD_numbers_scan.json")
 
 # N_segments scan: 1,2,4, then 6..20 step 2
-N_SEGMENTS_LIST =[1] #[1, 2, 4] + list(range(6, 22, 2))
+N_SEGMENTS_LIST =[1,3,5,7,9,11,13,15,17,19] #[1, 2, 4] + list(range(6, 22, 2))
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Output structure helpers
