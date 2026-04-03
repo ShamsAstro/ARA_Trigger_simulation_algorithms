@@ -11,12 +11,12 @@ from matplotlib.cm import ScalarMappable
 # ============================================================
 # User settings
 # ============================================================
-IN_JSON = Path("efficiency_scan_50per_results.json").resolve()
+IN_JSON = Path("efficiency_scan_100per_results.json").resolve()
 OUT_JSON = Path("snr50_all_angles_results.json").resolve()
-OUT_PLOT = Path("snr50_angle_map.png").resolve()
+OUT_PLOT = Path("snr50_angle_map_100per.png").resolve()
 
-THETA_BIN_WIDTH = 10.0   # deg
-PHI_BIN_WIDTH = 10.0     # deg
+THETA_BIN_WIDTH = 25.0   # deg
+PHI_BIN_WIDTH = 8.0     # deg
 
 
 # ============================================================
@@ -177,9 +177,9 @@ def make_angle_map_plot(fit_rows, out_plot, theta_bin_width, phi_bin_width):
         )
         ax.add_patch(rect)
 
-    ax.set_xlabel("Theta (deg)", fontsize=14)
-    ax.set_ylabel("Phi (deg)", fontsize=14)
-    ax.set_title(r"SNR$_{50}$ angle map", fontsize=16)
+    ax.set_xlabel("Azimuth angle (deg)", fontsize=15)
+    ax.set_ylabel("Zenith angle (deg)", fontsize=15)
+    ax.set_title(r"SNR$_{50}$ angle map", fontsize=18)
 
     # sensible limits from actual populated bins
     ax.set_xlim(
@@ -191,9 +191,12 @@ def make_angle_map_plot(fit_rows, out_plot, theta_bin_width, phi_bin_width):
         np.max(phi_vals) + phi_bin_width
     )
 
-    # nice ticks based on actual values
-    ax.set_xticks(np.unique(theta_vals))
-    ax.set_yticks(np.unique(phi_vals))
+    #ticks to print every other tick to avoid clutter
+    ax.set_xticks(np.unique(theta_vals)[::3])
+    ax.set_yticks(np.unique(phi_vals)[::2])
+
+    #flip the y-axis so that phi=0 is at the bottom and phi increases upwards
+    ax.invert_yaxis()
 
     ax.grid(False)
 
@@ -202,7 +205,6 @@ def make_angle_map_plot(fit_rows, out_plot, theta_bin_width, phi_bin_width):
     cbar = plt.colorbar(sm, ax=ax)
     cbar.set_label(r"SNR$_{50}$", fontsize=13)
 
-    plt.tight_layout()
     plt.savefig(out_plot, dpi=300)
     plt.close()
 
