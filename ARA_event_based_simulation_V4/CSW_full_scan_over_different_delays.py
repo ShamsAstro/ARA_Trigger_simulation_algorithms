@@ -28,15 +28,20 @@ N_OF_CHANNELS = 8
 SCAN_RATE = 150                         # number of events per angle setting
 CSW_THRESHOLD = 15.71
 
-PULSE_AMPLITUDES = np.arange(40, 280, 10)  # np.array([300]) 
-ANGLE_PERCENT_TO_USE = 50.0             # choose 10 for 10%, 100 for full scan
-RANDOM_SEED = 12345
+PULSE_AMPLITUDES = np.concatenate([
+    np.arange(120, 150, 10),
+    np.arange(150, 225, 6),
+    np.arange(225, 270, 15)
+]) # np.array([300]) 
+
+ANGLE_PERCENT_TO_USE = 100             # choose 10 for 10%, 100 for full scan
+RANDOM_SEED = 12346
 
 PLOT_FIRST_EVENT = False                # helpful for troubleshooting
 PRINT_EVERY_N_EVENTS = 45               # progress print frequency
 
-DELAY_JSON_PATH = Path("./jsons/delay_list.json").resolve()
-OUTPUT_JSON_PATH = Path("efficiency_scan_50per_results.json").resolve()
+DELAY_JSON_PATH = Path("./jsons/delay_list_full.json").resolve()
+OUTPUT_JSON_PATH = Path("efficiency_scan_100per_results.json").resolve()
 
 PULSE_JSON_PATH = Path(
     "../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json"
