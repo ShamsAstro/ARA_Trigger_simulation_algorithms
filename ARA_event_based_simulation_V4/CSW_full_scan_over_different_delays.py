@@ -35,12 +35,12 @@ PULSE_AMPLITUDES = np.concatenate([
 ]) # np.array([300]) 
 
 ANGLE_PERCENT_TO_USE = 100             # choose 10 for 10%, 100 for full scan
-RANDOM_SEED = 12346
+RANDOM_SEED = 12347
 
 PLOT_FIRST_EVENT = False                # helpful for troubleshooting
 PRINT_EVERY_N_EVENTS = 45               # progress print frequency
 
-DELAY_JSON_PATH = Path("./jsons/delay_list_full.json").resolve()
+DELAY_JSON_PATH = Path("delay_list_full.json").resolve()
 OUTPUT_JSON_PATH = Path("efficiency_scan_100per_results.json").resolve()
 
 PULSE_JSON_PATH = Path(
