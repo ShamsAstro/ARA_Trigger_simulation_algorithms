@@ -20,12 +20,12 @@ ARA_channel_positions = {
 
 #Theta= 90  #[0 to 360]
 #Phi = 150  #[70 to 150]
-R = 500 
+R = 700 
 
-Theta_list = np.arange(0, 360, 10)
-Phi_list = np.arange(85, 151, 10)   
+Theta_list = np.arange(0, 360, 25)
+Phi_list = np.arange(85, 161, 8)   
 
-print(Phi_list)
+
 
 def vertex_coordinates(theta, phi, r):
     x = r * np.sin(np.deg2rad(phi)) * np.cos(np.deg2rad(theta))
@@ -66,6 +66,8 @@ def travel_time_between_points(start_point, end_point, ice, n_reflections=0):
     return rays.get_travel_time(0)
 
 
+
+
 def calculate_delay_list(vertex, channel_positions, ice, n_reflections=0):
     vertex_loc = vertex_coordinates(vertex[0], vertex[1], vertex[2])
     delay_list = []
@@ -84,8 +86,10 @@ for theta in Theta_list:
         delay_list = calculate_delay_list(vertex, ARA_channel_positions, ice)
         delay_dict[f"theta_{theta}_phi_{phi}"] = delay_list.tolist() 
 
-with open("delay_list.json", "w") as f:
+with open("delay_list_full.json", "w") as f:
     json.dump(delay_dict, f, indent=4)
+"""
+"""
     
 
 
