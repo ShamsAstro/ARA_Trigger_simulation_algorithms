@@ -7,12 +7,12 @@ from scipy.optimize import curve_fit
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-IN_JSON = Path("performance_CSW_trigger_results.json")
+IN_JSON = Path("performance_CSW_trigger_ODD_results.json")
 
-OUT_DIR = Path("plots_CSW_SNR50_vs_Nsegments_new_plots")   #"plots_CSW_SNR50_vs_Nsegments"
+OUT_DIR = Path("plots_CSW_SNR50_vs_Nsegments_ODD_plots")   #"plots_CSW_SNR50_vs_Nsegments"
 OUT_DIR.mkdir(exist_ok=True)
 
-OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_Nsegments_CSW_new_plots.png" #SNR50_vs_Nsegments_CSW.png
+OUT_COMPREHENSIVE = OUT_DIR / "SNR50_vs_Nsegments_CSW_new_plots_ODD.png" #SNR50_vs_Nsegments_CSW.png
 
 # If you want the error bar to be the FULL difference, set HALF_DIFF_ERROR=False
 HALF_DIFF_ERROR = True
@@ -204,14 +204,14 @@ def main():
     ax.plot(nseg, snr50_mean, "--", alpha=0.7, color="royalblue")
     ax.legend(fontsize=14)
 
-    ax.set_xlabel("Number of CSW segments ", fontsize=14)
+    ax.set_xlabel(r"$N_{\mathrm{segments}}$", fontsize=14)
     #x ticks as integers
     ax.set_xticks(nseg)
 
     ax.set_ylabel("SNR$_{50}$", fontsize=14)
 
     err_note = "half-difference" if HALF_DIFF_ERROR else "full difference"
-    ax.set_title("CSW trigger: SNR_50 vs N_segments\n")
+    ax.set_title(r"CSW trigger: SNR$_{50}$ vs $N_{\mathrm{segments}}$\n")
     ax.grid(True, alpha=0.3)
 
     # ---------- TOP AXIS: time per segment ----------

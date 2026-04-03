@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import defaultdict
 
 # ----------------- CONFIG -----------------
-IN_JSON = Path("threshold_CSW_segments_full_scan.json")   # <-- your earlier scan JSON
+IN_JSON = Path("threshold_CSW_segments_N_segment_ODD_numbers_scan.json")   # <-- your earlier scan JSON
 
 LABEL = "PURE noise (CSW FFT)"
 EVENT_NS = 170.0               # ns per event record
@@ -19,10 +19,10 @@ X_AXIS_START = None            # set to a float if you want, else None
 Y_AXIS_TOP   = 1e10            # log axis upper bound
 Y_AXIS_BOTTOM = None           # set if you want, else None
 
-OUT_DIR = Path("plots_nsegments_CSW_full_scans")
+OUT_DIR = Path("plots_nsegments_CSW_full_ODD_scans")
 OUT_DIR.mkdir(exist_ok=True)
 
-SUMMARY_JSON = OUT_DIR / "summary_nsegments_analysis.json"
+SUMMARY_JSON = OUT_DIR / "summary_ODD_nsegments_analysis.json"
 # ------------------------------------------
 
 

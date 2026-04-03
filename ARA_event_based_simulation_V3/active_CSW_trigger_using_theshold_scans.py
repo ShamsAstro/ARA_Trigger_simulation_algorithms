@@ -19,10 +19,10 @@ from trig_functions_cop import *  # contains ARA_CSW_trigger_FFT_optimized
 #
 # Example snippet you showed:
 # "results": { "1": { ... "threshold_at_target_hz": ..., "threshold_at_target_hz_err": ... }, ... }
-THRESH_SCAN_SUMMARY_JSON = Path("summary_nsegments_analysis.json")
+THRESH_SCAN_SUMMARY_JSON = Path("summary_ODD_nsegments_analysis.json")
 
 # Output JSON (no plots)
-OUT_JSON = Path("performance_CSW_trigger_results.json")
+OUT_JSON = Path("performance_CSW_trigger_ODD_results.json")
 
 # Efficiency-scan settings (adapted from your script)
 SAMPLING_RATE_GHZ = 3.2

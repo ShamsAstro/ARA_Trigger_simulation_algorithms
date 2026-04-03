@@ -1,0 +1,200 @@
+{
+  "input_json": "threshold_CSW_segments_N_segment_ODD_numbers_scan.json",
+  "label": "PURE noise (CSW)",
+  "event_ns": 170.0,
+  "target_hz": 5.0,
+  "fit_start_candidates": [
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39
+  ],
+  "meta_from_scan_file": {
+    "created_utc": "2026-02-25T06:20:11Z",
+    "script": "Full_CSW_segments_scan.py",
+    "simulation_parameters": {
+      "SAMPLING_RATE_GHZ": 3.2,
+      "TIME_STEP_NS": 0.3125,
+      "NOISE_RMS_ADC": 100,
+      "MAX_SIGNAL_ADC": 4095,
+      "WINDOW_SIZE_MHZ": 5880000.0,
+      "N_WINDOWS": 1,
+      "SIM_DURATION_NS": 170.06802721088437,
+      "SIM_DURATION_SAMPLES": 544,
+      "N_CHANNELS": 8,
+      "SCAN_TIME_LIMIT_SEC": 5400.0,
+      "START_THRESHOLD": 4,
+      "THRESHOLD_STEP": 1,
+      "TRIGGERS_PER_THRESHOLD": 15,
+      "N_SEGMENTS_LIST": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19
+      ]
+    },
+    "inputs": {
+      "pulse_json_path": "/home/shamshassiki/ARA_event_based_trigger/ARA_Trigger_simulation_algorithms/ARA_event_based_simulation_V3/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json",
+      "impulse_response_path": "/home/shamshassiki/ARA_event_based_trigger/ARA_Trigger_simulation_algorithms/ARA_event_based_simulation_V3/jsons/new_impulse_response_ARA_event_based_simulation_V2.json",
+      "impulse_channel_key": "ch2_2x_amp"
+    },
+    "trigger": {
+      "function": "ARA_CSW_trigger_FFT_optimized",
+      "notes": "Noise-only scans; each record reports trigger_rate = num_triggers/num_events_scanned."
+    }
+  },
+  "field_mapping": {
+    "threshold_key": "threshold",
+    "trigger_keys": [
+      "num_triggers",
+      "triggers"
+    ],
+    "event_keys": [
+      "num_events_scanned",
+      "events"
+    ],
+    "group_key": "N_segments"
+  },
+  "results": {
+    "1": {
+      "status": "ok",
+      "num_points_total": 12,
+      "fit_start_threshold": 13.0,
+      "A": 2.3979518957800979e+27,
+      "k": -3.9097668788962916,
+      "chi2": 5.5696356781406235,
+      "ndof": 1,
+      "chi2_reduced": 5.5696356781406235,
+      "threshold_at_target_hz": 15.713206566425848,
+      "threshold_at_target_hz_err": 0.0884363390112509
+    },
+    "3": {
+      "status": "ok",
+      "num_points_total": 21,
+      "fit_start_threshold": 21.0,
+      "A": 6262806806777587.0,
+      "k": -1.3112013011480228,
+      "chi2": 1.567108571730745,
+      "ndof": 2,
+      "chi2_reduced": 0.7835542858653725,
+      "threshold_at_target_hz": 26.513066230450004,
+      "threshold_at_target_hz_err": 0.36680393662483074
+    },
+    "5": {
+      "status": "ok",
+      "num_points_total": 27,
+      "fit_start_threshold": 27.0,
+      "A": 12949647115282.348,
+      "k": -0.8280730660509218,
+      "chi2": 2.0565932424417133,
+      "ndof": 2,
+      "chi2_reduced": 1.0282966212208566,
+      "threshold_at_target_hz": 34.517064874231636,
+      "threshold_at_target_hz_err": 0.8533231937056053
+    },
+    "7": {
+      "status": "ok",
+      "num_points_total": 33,
+      "fit_start_threshold": 33.0,
+      "A": 9136673036367.271,
+      "k": -0.6917927710805606,
+      "chi2": 4.770329954033162,
+      "ndof": 2,
+      "chi2_reduced": 2.385164977016581,
+      "threshold_at_target_hz": 40.81262583619993,
+      "threshold_at_target_hz_err": 1.0700147517141037
+    },
+    "9": {
+      "status": "ok",
+      "num_points_total": 38,
+      "fit_start_threshold": 39.0,
+      "A": 2882496510188.944,
+      "k": -0.5743897041025434,
+      "chi2": 2.165922109468324,
+      "ndof": 1,
+      "chi2_reduced": 2.165922109468324,
+      "threshold_at_target_hz": 47.14610964045286,
+      "threshold_at_target_hz_err": 2.286171001859512
+    },
+    "11": {
+      "status": "ok",
+      "num_points_total": 43,
+      "fit_start_threshold": 39.0,
+      "A": 116759619282.00554,
+      "k": -0.43540284624253134,
+      "chi2": 20.439676615845595,
+      "ndof": 6,
+      "chi2_reduced": 3.4066127693075994,
+      "threshold_at_target_hz": 54.83185380121728,
+      "threshold_at_target_hz_err": 1.1475328597422485
+    },
+    "13": {
+      "status": "ok",
+      "num_points_total": 47,
+      "fit_start_threshold": 39.0,
+      "A": 50879364543.635155,
+      "k": -0.38426916469394656,
+      "chi2": 8.852663621030638,
+      "ndof": 10,
+      "chi2_reduced": 0.8852663621030639,
+      "threshold_at_target_hz": 59.966522092668555,
+      "threshold_at_target_hz_err": 0.8901401216823404
+    },
+    "15": {
+      "status": "ok",
+      "num_points_total": 54,
+      "fit_start_threshold": 39.0,
+      "A": 3560407413.288941,
+      "k": -0.2934014672610178,
+      "chi2": 10.978764574411805,
+      "ndof": 17,
+      "chi2_reduced": 0.6458096808477533,
+      "threshold_at_target_hz": 69.47375926593264,
+      "threshold_at_target_hz_err": 0.8163523119753234
+    },
+    "17": {
+      "status": "ok",
+      "num_points_total": 57,
+      "fit_start_threshold": 39.0,
+      "A": 7532456855.878567,
+      "k": -0.2909466758432139,
+      "chi2": 19.97872292901655,
+      "ndof": 20,
+      "chi2_reduced": 0.9989361464508274,
+      "threshold_at_target_hz": 72.63547221339314,
+      "threshold_at_target_hz_err": 0.7146490664461139
+    },
+    "19": {
+      "status": "ok",
+      "num_points_total": 61,
+      "fit_start_threshold": 39.0,
+      "A": 4859934857.79435,
+      "k": -0.26312568506423323,
+      "chi2": 23.160904824384865,
+      "ndof": 24,
+      "chi2_reduced": 0.965037701016036,
+      "threshold_at_target_hz": 78.65006775578338,
+      "threshold_at_target_hz_err": 0.7211263260515318
+    }
+  }
+}

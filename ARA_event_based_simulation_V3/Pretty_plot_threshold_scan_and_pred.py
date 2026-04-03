@@ -7,7 +7,7 @@ from collections import defaultdict
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-IN_JSON = Path("threshold_CSW_segments_full_scan.json")  # <-- your CSW threshold-scan JSON
+IN_JSON = Path("threshold_CSW_segments_N_segment_ODD_numbers_scan.json")   # <-- your earlier scan JSON
 
 LABEL = "PURE noise (CSW)"
 EVENT_NS = 170.0          # ns per event record
@@ -21,11 +21,10 @@ X_AXIS_START = None
 Y_AXIS_TOP = 1e9
 Y_AXIS_BOTTOM = 0.1 #None
 
-OUT_DIR = Path("plots_CSW_full_scans_new_plots")
+OUT_DIR = Path("plots_nsegments_CSW_full_ODD_scans")
 OUT_DIR.mkdir(exist_ok=True)
 
-SUMMARY_JSON = OUT_DIR / "summary_CSW_threshold_scan_new_plots.json"
-
+SUMMARY_JSON = OUT_DIR / "summary_ODD_nsegments_analysis.json"
 # ---------------------------
 # JSON FIELD MAPPING (edit if needed)
 # ---------------------------
@@ -43,7 +42,7 @@ EVT_KEYS = ("num_events_scanned", "events")
 # Grouping key for separate curves (examples: "N_segments", "N_windows", "csw_windows", etc.)
 # If your CSW scan does NOT vary a discrete parameter, set GROUP_KEY = None
 GROUP_KEY = "N_segments"   # <--- change this to your CSW scan grouping key, or None
-GROUP_LABEL = "N_segments" # <--- used only for plot labels/titles
+GROUP_LABEL = r"$N_{\mathrm{segments}}$" # <--- used only for plot labels/titles
 # ─────────────────────────────────────────────────────────────────────────────
 
 
@@ -323,7 +322,7 @@ def main():
 
         pos = (rate > 0) & np.isfinite(rate) & np.isfinite(sig)
         plt.errorbar(thr[pos], rate[pos], yerr=sig[pos], fmt="o", ms=5, capsize=2,
-                     label=f"{GROUP_LABEL}={g} data" if GROUP_KEY is not None else "data")
+                     label=f"{GROUP_LABEL} = {g} data" if GROUP_KEY is not None else "data")
 
         if xgrid is not None:
             plt.plot(xgrid, ygrid, lw=2, label=f"fit (start≥{best_fit['mask_fit_start']})")
@@ -356,7 +355,7 @@ def main():
         if Y_AXIS_TOP is not None:
             plt.ylim(top=float(Y_AXIS_TOP))
 
-        out_name = f"{GROUP_LABEL}_{g}.png" if GROUP_KEY is not None else "scan.png"
+        out_name = f"N_segments_{g}.png" if GROUP_KEY is not None else "scan.png"
         out_file = OUT_DIR / out_name
         plt.tight_layout()
         plt.savefig(out_file)
@@ -380,7 +379,7 @@ def main():
         plt.errorbar(
             thr[pos], rate[pos], yerr=sig[pos],
             fmt="o", ms=4, capsize=2, alpha=0.55,
-            label=(f"{GROUP_LABEL}={g}" if GROUP_KEY is not None else "data")
+            label=(f"{GROUP_LABEL} = {g}" if GROUP_KEY is not None else "data")
         )
 
         best = analysis_summary["results"].get(str(g), {})
