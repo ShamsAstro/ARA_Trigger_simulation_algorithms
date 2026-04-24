@@ -192,8 +192,12 @@ def make_angle_map_plot(fit_rows, out_plot, theta_bin_width, phi_bin_width):
     )
 
     #ticks to print every other tick to avoid clutter
-    ax.set_xticks(np.unique(theta_vals)[::3])
-    ax.set_yticks(np.unique(phi_vals)[::2])
+    #ax.set_xticks(np.unique(theta_vals)[::3])
+    #ax.set_yticks(np.unique(phi_vals)[::2])
+
+    #show all ticks
+    ax.set_xticks(np.unique(theta_vals))
+    ax.set_yticks(np.unique(phi_vals))
 
     #flip the y-axis so that phi=0 is at the bottom and phi increases upwards
     ax.invert_yaxis()

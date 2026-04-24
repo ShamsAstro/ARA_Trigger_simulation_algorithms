@@ -921,8 +921,104 @@ def find_phased_triggers(channel_signals, time_axis, phased_trigger_parameters):
 
 
 
+def ARA_beam_power_finder(
+    channel_signals,
+    time_axis,
+    sampling_rate,   # in GHz
+    beam_angles,
+    beam_delays
+):
+    """
+    Compute beamformed event power for all beams.
 
+    Parameters
+    ----------
+    channel_signals : array-like, shape (n_channels, n_samples)
+        Waveforms for each channel.
+    time_axis : array-like, shape (n_samples,)
+        Time axis in ns. Only used for consistency checks.
+    sampling_rate : float
+        Sampling rate in GHz. Example: 3.2 means dt = 1/3.2 ns.
+    beam_angles : list
+        List of beam angle labels, typically [(zenith, azimuth), ...].
+        Only used to preserve ordering / bookkeeping.
+    beam_delays : dict or array-like
+        Delays in ns for each beam and channel.
 
+        Supported formats:
+        1) dict keyed by angle combination:
+           beam_delays[(zen, az)] = [d0, d1, ..., dN-1]
+
+        2) list/array with shape (n_beams, n_channels),
+           in the same order as beam_angles.
+
+    Returns
+    -------
+    max_event_power : float
+        Maximum total beam power across all beams.
+    power_list : list of float
+        Total beam power for each beam, in the same order as beam_angles.
+    """
+
+    channel_signals = np.asarray(channel_signals, dtype=float)
+    time_axis = np.asarray(time_axis, dtype=float)
+
+    if channel_signals.ndim != 2:
+        raise ValueError("channel_signals must have shape (n_channels, n_samples).")
+
+    n_channels, n_samples = channel_signals.shape
+
+    if time_axis.ndim != 1 or len(time_axis) != n_samples:
+        raise ValueError("time_axis must be 1D and have the same length as each channel waveform.")
+
+    if len(beam_angles) == 0:
+        return 0.0, []
+
+    dt_ns = 1.0 / sampling_rate   # since sampling_rate is in GHz = samples/ns
+
+    power_list = []
+
+    for beam_index, angle_combination in enumerate(beam_angles):
+
+        # get per-channel delays for this beam
+        if isinstance(beam_delays, dict):
+            if angle_combination not in beam_delays:
+                raise KeyError(f"Missing delays for beam angle {angle_combination}.")
+            delays_ns = np.asarray(beam_delays[angle_combination], dtype=float)
+        else:
+            delays_ns = np.asarray(beam_delays[beam_index], dtype=float)
+
+        if len(delays_ns) != n_channels:
+            raise ValueError(
+                f"Beam {angle_combination} has {len(delays_ns)} delays, "
+                f"but there are {n_channels} channels."
+            )
+
+        shifted_channels = []
+
+        for ch in range(n_channels):
+            delay_ns = delays_ns[ch]
+
+            # apply NEGATIVE of beam delay to de-shift / align
+            shift_samples = int(np.round((delay_ns) / dt_ns))     #removide the negative sign to shift in the right direction
+
+            shifted_waveform = np.roll(channel_signals[ch], shift_samples)
+            shifted_channels.append(shifted_waveform)
+
+        shifted_channels = np.asarray(shifted_channels)
+
+        # coherent sum across channels
+        beam_sum = np.sum(shifted_channels, axis=0)
+
+        # instantaneous power and integrated event power
+        beam_power_trace = beam_sum**2
+        total_beam_power = np.sum(beam_power_trace)
+
+        power_list.append(total_beam_power)
+
+    max_event_power = float(np.max(power_list)) if power_list else 0.0
+
+    return max_event_power, power_list
 
 
 

@@ -20,7 +20,7 @@ ARA_channel_positions = {
 
 #Theta= 90  #[0 to 360]
 #Phi = 150  #[70 to 150]
-R = 700 
+R = 300 
 
 Theta_list = np.arange(0, 360, 25)
 Phi_list = np.arange(85, 161, 8)   
@@ -78,7 +78,7 @@ def calculate_delay_list(vertex, channel_positions, ice, n_reflections=0):
     delay_list = np.array(delay_list) - np.median(delay_list)
     return delay_list 
 
-#make a json file that has all the delay lists for the iteration over all angles at R=1km
+#make a json file that has all the delay lists for the iteration over all angles at R=300m
 delay_dict = {}
 for theta in Theta_list:
     for phi in Phi_list:
@@ -86,7 +86,7 @@ for theta in Theta_list:
         delay_list = calculate_delay_list(vertex, ARA_channel_positions, ice)
         delay_dict[f"theta_{theta}_phi_{phi}"] = delay_list.tolist() 
 
-with open("delay_list_full.json", "w") as f:
+with open("delay_list_full_R300.json", "w") as f:
     json.dump(delay_dict, f, indent=4)
 """
 """

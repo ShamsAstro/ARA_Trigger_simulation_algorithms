@@ -211,6 +211,48 @@ def generate_pulse_with_delay(pulse_v, pulse_t, STEP, simulation_index_duration,
 
     return signal
 
+def generate_pulse_with_delay_v2(pulse_v, pulse_t, STEP, simulation_index_duration,
+                              amplitude_scale, start_time, delay_ns):
+    """
+    Same as generate_pulse, but applies a time delay (ns) using np.roll.
+
+    Positive delay  -> shift right (later in time)
+    Negative delay  -> shift left (earlier in time)
+
+    Returns
+    -------
+    signal : 1D ndarray
+        Output trace of length `simulation_index_duration`.
+    """
+
+    pulse_v = np.asarray(pulse_v, dtype=float)
+    pulse_t = np.asarray(pulse_t, dtype=float)
+
+    # Base pulse placement from the requested start time
+    start_index = int(np.argmin(np.abs(pulse_t - start_time)))
+
+    zeros_array = np.zeros(len(pulse_v), dtype=pulse_v.dtype)
+    pulse_v_zeros = np.concatenate((pulse_v, zeros_array))
+
+    pulse_indices = np.linspace(
+        start_index,
+        start_index + len(pulse_v),
+        simulation_index_duration,
+        dtype=int
+    )
+    pulse_indices = np.clip(pulse_indices, 0, len(pulse_v_zeros) - 1)
+
+    signal = pulse_v_zeros[pulse_indices]
+
+    # Apply delay with your convention:
+    # positive delay -> later -> shift right
+    # negative delay -> earlier -> shift left
+    delay_samples = int(np.round(-delay_ns / STEP))
+    signal = np.roll(signal, delay_samples)
+
+    signal *= amplitude_scale
+    return signal
+
 def generate_pulse_at_angle(
     pulse_voltage,                 # 1D array of the pulse shape
     pulse_time,                    # 1D array of times (ns) for pulse_voltage (sorted)
@@ -283,6 +325,16 @@ def make_full_signal_with_delay(impulse_json_path, SIMULATION_DURATION_NS, SAMPL
     
 
     full_signal = digitize_signal(noise + pulse, max_signal) #noise + pulse 
+    full_signal = full_signal[:simulation_duration_samples]  # Ensure the signal length matches the
+    return t, full_signal
+
+def make_full_signal_with_delay_no_noise( SIMULATION_DURATION_NS, 
+                     pulse_voltage, pulse_time, time_step, simulation_duration_samples, amplitude_scale, max_signal , start_time, pulse_delay_ns):
+
+    t = np.arange(simulation_duration_samples) * time_step  # Time axis for the output signal
+    pulse = generate_pulse_with_delay_v2(pulse_voltage, pulse_time, time_step, simulation_duration_samples, amplitude_scale, start_time, pulse_delay_ns)
+    
+    full_signal = digitize_signal(pulse, max_signal) #noise + pulse 
     full_signal = full_signal[:simulation_duration_samples]  # Ensure the signal length matches the
     return t, full_signal
 
