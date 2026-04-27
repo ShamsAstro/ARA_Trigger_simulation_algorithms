@@ -1,5 +1,6 @@
 import numpy as np
 import json
+from pathlib import Path
 
 # ---- your geometry ----
 ARA_channel_positions = {
@@ -65,10 +66,10 @@ def plane_wave_travel_times_from_R(
 
 # ---- generate JSON ----
 def generate_beam_delay_json(
-    filename="Trigger_beams_all_angles_10.json",
+    filename="Trigger_beams_test_delete.json",
     R=100.0,
-    azimuths=np.linspace(0, 180, 10),
-    zeniths=np.linspace(0, 180, 10)
+    azimuths=np.linspace(0, 90, 10),
+    zeniths=np.linspace(0, 90, 10)
 ):
     data = {}
 
@@ -95,10 +96,14 @@ def generate_beam_delay_json(
                 "delays_ns": times_ns.tolist()
             }
 
-    with open(filename, "w") as f:
+    output_path = Path(filename)
+    if not output_path.is_absolute():
+        output_path = Path(__file__).resolve().parent / output_path
+
+    with open(output_path, "w") as f:
         json.dump(data, f, indent=2)
 
-    print(f"Saved beam delays to {filename}")
+    print(f"Saved beam delays to {output_path}")
 
 
 # ---- run ----
