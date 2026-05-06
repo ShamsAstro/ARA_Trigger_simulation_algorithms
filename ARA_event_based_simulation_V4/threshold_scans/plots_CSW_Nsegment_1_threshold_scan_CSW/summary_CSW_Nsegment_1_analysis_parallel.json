@@ -1,0 +1,25 @@
+{
+  "input_json": "Test_threshold_scan_CSW_2windows_30min_fast.json",
+  "label": "PURE noise CSW, N_segments = 1",
+  "event_ns": 340.0,
+  "target_hz": 5.0,
+  "fit_start_candidates": [
+    11,
+    13,
+    15,
+    17,
+    19
+  ],
+  "meta_from_scan_file": {
+    "note": "no meta found"
+  },
+  "num_points_total": 12,
+  "fit_start_threshold": 11.0,
+  "A": 5.651050505891905e+30,
+  "k": -5.194820897700594,
+  "chi2": 5.328957226113312,
+  "ndof": 1,
+  "chi2_reduced": 5.328957226113312,
+  "threshold_at_5hz": 13.320951327915726,
+  "threshold_at_5hz_err": 0.07238050978172633
+}

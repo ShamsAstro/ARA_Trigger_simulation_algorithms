@@ -11,12 +11,12 @@ from matplotlib.cm import ScalarMappable
 # ============================================================
 # User settings
 # ============================================================
-IN_JSON = Path("efficiency_scan_100per_results.json").resolve()
-OUT_JSON = Path("snr50_all_angles_results.json").resolve()
-OUT_PLOT = Path("snr50_angle_map_100per.png").resolve()
+IN_JSON = Path("efficiency_scan_BEAM_100per_results_25000events_1000beams_FULL_all_angles.json").resolve()
+OUT_JSON = Path("snr50_BEAM_25000_parallel.json").resolve()
+OUT_PLOT = Path("snr50_BEAM_100per_25000_parallel.png").resolve()
 
-THETA_BIN_WIDTH = 25.0   # deg
-PHI_BIN_WIDTH = 8.0     # deg
+THETA_BIN_WIDTH = None
+PHI_BIN_WIDTH = None
 
 
 # ============================================================
@@ -157,20 +157,23 @@ def make_angle_map_plot(fit_rows, out_plot, theta_bin_width, phi_bin_width):
     phi_vals = np.array([r["phi_deg"] for r in valid_rows], dtype=float)
     snr50_vals = np.array([r["snr_50"] for r in valid_rows], dtype=float)
 
+    # 👉 NEW: compute average SNR_50
+    average_snr50 = float(np.mean(snr50_vals))
+
     fig, ax = plt.subplots(figsize=(11, 7))
 
     norm = Normalize(vmin=np.min(snr50_vals), vmax=np.max(snr50_vals))
     cmap = plt.cm.coolwarm
 
     for row in valid_rows:
-        theta = float(row["theta_deg"])
-        phi = float(row["phi_deg"])
+        theta = float(row["theta_deg"])   # zenith
+        phi = float(row["phi_deg"])       # azimuth
         snr50 = float(row["snr_50"])
 
         rect = Rectangle(
-            (theta - theta_bin_width / 2.0, phi - phi_bin_width / 2.0),
-            theta_bin_width,
+            (phi - phi_bin_width / 2.0, theta - theta_bin_width / 2.0),
             phi_bin_width,
+            theta_bin_width,
             facecolor=cmap(norm(snr50)),
             edgecolor="black",
             linewidth=0.6
@@ -181,25 +184,31 @@ def make_angle_map_plot(fit_rows, out_plot, theta_bin_width, phi_bin_width):
     ax.set_ylabel("Zenith angle (deg)", fontsize=15)
     ax.set_title(r"SNR$_{50}$ angle map", fontsize=18)
 
+    # 👉 NEW: display average SNR_50 on plot
+    ax.text(
+        0.02, 0.98,
+        r"Average SNR$_{50}$ = " + "{:.3f}".format(average_snr50),
+        transform=ax.transAxes,
+        fontsize=13,
+        verticalalignment="top",
+        bbox=dict(boxstyle="round", facecolor="white", alpha=0.8)
+    )
+
     # sensible limits from actual populated bins
     ax.set_xlim(
-        np.min(theta_vals) - theta_bin_width,
-        np.max(theta_vals) + theta_bin_width
-    )
-    ax.set_ylim(
         np.min(phi_vals) - phi_bin_width,
         np.max(phi_vals) + phi_bin_width
     )
+    ax.set_ylim(
+        np.min(theta_vals) - theta_bin_width,
+        np.max(theta_vals) + theta_bin_width
+    )
 
-    #ticks to print every other tick to avoid clutter
-    #ax.set_xticks(np.unique(theta_vals)[::3])
-    #ax.set_yticks(np.unique(phi_vals)[::2])
+    # show only a third of the unique values as ticks to avoid clutter
+    ax.set_xticks(np.unique(phi_vals)[::6])
+    ax.set_yticks(np.unique(theta_vals)[::3])
 
-    #show all ticks
-    ax.set_xticks(np.unique(theta_vals))
-    ax.set_yticks(np.unique(phi_vals))
-
-    #flip the y-axis so that phi=0 is at the bottom and phi increases upwards
+    # flip the y-axis so that smaller zenith (e.g. 30) is at the top
     ax.invert_yaxis()
 
     ax.grid(False)
@@ -212,6 +221,40 @@ def make_angle_map_plot(fit_rows, out_plot, theta_bin_width, phi_bin_width):
     plt.savefig(out_plot, dpi=300)
     plt.close()
 
+
+def estimate_bin_widths_from_angles(fit_rows):
+    """
+    Estimate rectangle bin widths from the actual selected angle grid.
+    Uses the smallest nonzero spacing in theta and phi.
+    """
+
+    theta_vals = np.array(
+        sorted(set(float(r["theta_deg"]) for r in fit_rows)),
+        dtype=float
+    )
+
+    phi_vals = np.array(
+        sorted(set(float(r["phi_deg"]) for r in fit_rows)),
+        dtype=float
+    )
+
+    theta_diffs = np.diff(theta_vals)
+    phi_diffs = np.diff(phi_vals)
+
+    theta_diffs = theta_diffs[theta_diffs > 0]
+    phi_diffs = phi_diffs[phi_diffs > 0]
+
+    if len(theta_diffs) > 0:
+        theta_bin_width = float(np.min(theta_diffs))
+    else:
+        theta_bin_width = 1.0
+
+    if len(phi_diffs) > 0:
+        phi_bin_width = float(np.min(phi_diffs))
+    else:
+        phi_bin_width = 1.0
+
+    return theta_bin_width, phi_bin_width
 
 # ============================================================
 # Main
@@ -270,11 +313,17 @@ def main():
     print("\nSaving extracted SNR_50 data to:")
     print(OUT_JSON)
 
+    theta_bin_width, phi_bin_width = estimate_bin_widths_from_angles(fit_rows)
+
+    print("\nEstimated bin widths from selected angles:")
+    print("Theta bin width = {:.6f} deg".format(theta_bin_width))
+    print("Phi bin width   = {:.6f} deg".format(phi_bin_width))
+
     out_data = {
         "source_json": str(IN_JSON),
         "settings_from_scan": settings,
-        "theta_bin_width_deg": THETA_BIN_WIDTH,
-        "phi_bin_width_deg": PHI_BIN_WIDTH,
+        "theta_bin_width_deg": theta_bin_width,
+        "phi_bin_width_deg": phi_bin_width,
         "results_by_angle": fit_rows
     }
 
@@ -285,8 +334,8 @@ def main():
     make_angle_map_plot(
         fit_rows=fit_rows,
         out_plot=OUT_PLOT,
-        theta_bin_width=THETA_BIN_WIDTH,
-        phi_bin_width=PHI_BIN_WIDTH
+        theta_bin_width=theta_bin_width,
+        phi_bin_width=phi_bin_width
     )
 
     print("Done.")

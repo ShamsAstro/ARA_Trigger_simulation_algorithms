@@ -62,6 +62,8 @@ def travel_time_between_points(start_point, end_point, ice, n_reflections=0):
 
     rays.set_start_and_end_point(start_point, end_point)
     rays.find_solutions()
+    path = rays.get_path(0)  # Get the path for solution 0
+    travel_time = rays.get_travel_time(0)
 
     return rays.get_travel_time(0)
 

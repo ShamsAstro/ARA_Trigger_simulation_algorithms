@@ -1022,6 +1022,70 @@ def ARA_beam_power_finder(
 
 
 
+def ARA_beam_trigger(
+    channel_signals,
+    time_axis,
+    threshold,
+    sampling_rate,
+    beam_angles,
+    beam_delays,
+    return_power=False
+):
+    """
+    Beam reconstruction trigger.
+
+    Computes the total coherent beam power for every beam, then triggers if
+    the maximum beam power is above threshold.
+
+    Parameters
+    ----------
+    channel_signals : array-like
+        Shape (n_channels, n_samples).
+
+    time_axis : array-like
+        Time axis in ns.
+
+    threshold : float
+        Trigger threshold applied to max beam power.
+
+    sampling_rate : float
+        Sampling rate in GHz.
+
+    beam_angles : list
+        List of beam angle labels.
+
+    beam_delays : dict
+        Delays for each beam.
+
+    return_power : bool
+        If True, return extra power information.
+
+    Returns
+    -------
+    triggered : bool
+        True if max beam power >= threshold.
+
+    OR, if return_power=True:
+
+    triggered, max_event_power, power_list
+    """
+
+    max_event_power, power_list = ARA_beam_power_finder(
+        channel_signals=channel_signals,
+        time_axis=time_axis,
+        sampling_rate=sampling_rate,
+        beam_angles=beam_angles,
+        beam_delays=beam_delays
+    )
+
+    triggered = bool(max_event_power >= threshold)
+
+    if return_power:
+        return triggered, max_event_power, power_list
+
+    return triggered
+
+
 
 
 

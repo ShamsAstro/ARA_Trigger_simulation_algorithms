@@ -57,7 +57,7 @@ def plane_wave_travel_times_from_R(
         t = travel_distance / (c / n)
 
         if return_ns:
-            t *= 1e9
+            t *= 1e9 
 
         times_list.append(t)
 
@@ -66,10 +66,10 @@ def plane_wave_travel_times_from_R(
 
 # ---- generate JSON ----
 def generate_beam_delay_json(
-    filename="Trigger_beams_test_delete.json",
+    filename="Event_sources_for_CSW_2500.json",
     R=100.0,
-    azimuths=np.linspace(0, 90, 10),
-    zeniths=np.linspace(0, 90, 10)
+    azimuths=np.linspace(0, 360, 50),
+    zeniths=np.linspace(0, 180, 50)
 ):
     data = {}
 

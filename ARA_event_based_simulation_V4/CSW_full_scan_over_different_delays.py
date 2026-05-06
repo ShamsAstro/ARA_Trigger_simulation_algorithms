@@ -20,28 +20,28 @@ TIME_STEP = 1.0 / SAMPLING_RATE         # ns
 NOISE_EQUALIZE = 100                    # ADC
 MAX_SIGNAL = 4095                       # ADC
 WINDOW_SIZE = 5.88 * 1e6                # MHz
-N_OF_WINDOWS = 1
+N_OF_WINDOWS = 2
 SIMULATION_DURATION_NS = N_OF_WINDOWS / WINDOW_SIZE * 1e9
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)
 
 N_OF_CHANNELS = 8
-SCAN_RATE = 150                         # number of events per angle setting
-CSW_THRESHOLD = 15.71
+SCAN_RATE = 50                         # number of events per angle setting
+CSW_THRESHOLD = 13.32
 
 PULSE_AMPLITUDES = np.concatenate([
-    np.arange(120, 150, 10),
-    np.arange(150, 225, 6),
-    np.arange(225, 270, 15)
+    np.arange(50, 150, 20),
+    np.arange(150, 225, 20),
+    np.arange(225, 270, 20)
 ]) # np.array([300]) 
 
-ANGLE_PERCENT_TO_USE = 100             # choose 10 for 10%, 100 for full scan
+ANGLE_PERCENT_TO_USE = 10             # choose 10 for 10%, 100 for full scan
 RANDOM_SEED = 12347
 
 PLOT_FIRST_EVENT = False                # helpful for troubleshooting
 PRINT_EVERY_N_EVENTS = 45               # progress print frequency
 
-DELAY_JSON_PATH = Path("delay_list_full.json").resolve()
-OUTPUT_JSON_PATH = Path("efficiency_scan_100per_results.json").resolve()
+DELAY_JSON_PATH = Path("Trigger_beams_1000_+-60.json").resolve()
+OUTPUT_JSON_PATH = Path("efficiency_scan_10per_results_1000beams.json").resolve()
 
 PULSE_JSON_PATH = Path(
     "../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json"

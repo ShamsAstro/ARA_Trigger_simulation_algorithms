@@ -321,8 +321,8 @@ def run_beam_recovery_study(
 # ============================================================
 if __name__ == "__main__":
 
-    EVENT_DELAY_JSON = "Trigger_event_delays_all_angles_110.json"
-    BEAM_DELAY_JSON = "Trigger_beams_all_angles_10.json"
+    EVENT_DELAY_JSON = "Event_sources_origins_25000.json"
+    BEAM_DELAY_JSON = "Trigger_beams_1000_+-60.json"
 
     results = run_beam_recovery_study(
         event_delay_json_path=EVENT_DELAY_JSON,
@@ -338,5 +338,5 @@ if __name__ == "__main__":
         SIMULATION_DURATION_SAMPLES=SIMULATION_DURATION_SAMPLES,
         MAX_SIGNAL=MAX_SIGNAL,
         PLOT_FIRST_EVENT=True,
-        output_results_json_path="Events_most_extensive.json"
+        output_results_json_path="Events_most_extensive_parallel.json"
     )
