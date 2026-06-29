@@ -21,7 +21,7 @@ TIME_STEP           = 1.0 / SAMPLING_RATE      # ns
 NOISE_EQUALIZE      = 100                      # ADC (use as noise_rms)
 MAX_SIGNAL          = 4095                     # ADC
 WINDOW_SIZE         = 5.88*1e6                 # MHz (name kept from your script)
-n_of_windows        = 1
+n_of_windows        = 2
 SIMULATION_DURATION_NS = n_of_windows/(WINDOW_SIZE) * 1e9  # ns
 SIMULATION_DURATION_SAMPLES = int(SIMULATION_DURATION_NS / TIME_STEP)
 N_of_channels       = 8
@@ -38,7 +38,7 @@ CSW_THRESHOLD =15.71   # <- “range of trigger of 5” interpreted as trigger v
 #    np.arange(400, 550, 25)
 #])
 #PULSE_AMPLITUDES= np.arange(100, 501,10)
-PULSE_AMPLITUDES = np.array([300])
+PULSE_AMPLITUDES = np.array([700])
 
 # ---------------- Load pulse and impulse response ----------------
 pulse_json_path = Path("../ARA_event_based_simulation_V2/jsons/new_pulse_waveform_ARA_event_based_simulation_V2.json").resolve()

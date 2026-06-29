@@ -28,7 +28,7 @@ num_samples = 600
 num_channels = 20
 sigma_noise = 1.0
 pulse_center = 310  # put the pulse near the middle of the 600-sample window
-rng = np.random.default_rng(7)
+rng = np.random.default_rng(seed=42)  # for reproducibility
 
 # Time axis in "nanoseconds" (1 sample = 1 ns)
 t = np.arange(num_samples)
@@ -85,7 +85,7 @@ def plot_segment_averages(ax, x, y, n_segments=10, linewidth=2.0):
     
     max_segment_avg = np.max(segment_avgs)
     signal_max = np.max(y)
-    scale_factor = signal_max / max_segment_avg if max_segment_avg > 0 else 1.0
+    scale_factor = signal_max / max_segment_avg if max_segment_avg > 0 else max_segment_avg#
     
     # Second pass: plot scaled segment averages
     for i in range(n_segments):
@@ -98,7 +98,7 @@ def plot_segment_averages(ax, x, y, n_segments=10, linewidth=2.0):
         ax.hlines(scaled_avg, x[start], x[end - 1], linewidth=linewidth, color='red', alpha=0.7, linestyle='--', label='segment average (scaled)' if i == 0 else '')
     
     if n_segments > 0:
-        ax.legend(loc='upper right', fontsize=14)
+        ax.legend(loc='upper right', fontsize=20)
 
 # -----------------------------
 # Plot
@@ -115,7 +115,7 @@ for ax, wf, N, snr_val, p2p_val, rms_val in plot_specs:
     ax.plot(t, wf, linewidth=1.5)
     plot_segment_averages(ax, t, wf, n_segments=10, linewidth=2.5)
 
-    ax.set_ylabel("Voltage²", fontsize=15)
+    ax.set_ylabel("Voltage²", fontsize=24)
     ax.grid(True, alpha=0.35)
 
     annotation = (
@@ -133,11 +133,11 @@ for ax, wf, N, snr_val, p2p_val, rms_val in plot_specs:
 
 for ax in axes:
     ax.tick_params(axis='both', which='major', labelsize=18)
-axes[0].set_title("Waveform²", fontsize=18, pad=14)
-axes[-1].set_xlabel("Time (ns)", fontsize=18)
+axes[0].set_title("Waveform²", fontsize=24, pad=14)
+axes[-1].set_xlabel("Time (ns)", fontsize=24)
 
 plt.tight_layout()
 
-fig.savefig('Hello3', dpi=200, bbox_inches="tight")
+fig.savefig('Hello4', dpi=200, bbox_inches="tight")
 #plt.show()
 # plt.close(fig)

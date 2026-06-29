@@ -3,16 +3,17 @@ import json
 from pathlib import Path
 
 # ---- your geometry ----
-ARA_channel_positions = {
-    0: (10.5874, 2.3432, -170.247),
-    1: (4.85167, -10.3981, -170.347),
-    2: (-2.58128, 9.37815, -171.589),
-    3: (-7.84111, -4.05791, -175.377),
-    4: (10.5873, 2.3428, -189.502),
-    5: (4.85157, -10.3985, -189.400),
-    6: (-2.58138, 9.37775, -191.242),
-    7: (-7.84131, -4.05821, -194.266),
-}
+Idealized_ARA_positions = {
+    0: (10.9186, 2.4504, -171.890),
+    1: (4.3884, -10.3483, -171.890),
+    2: (-1.8802, 8.9806, -171.890),
+    3: (-8.4104, -3.8181, -171.890),
+    4: (10.9186, 2.4504, -191.102),
+    5: (4.3884, -10.3483, -191.102),
+    6: (-1.8802, 8.9806, -191.102),
+    7: (-8.4104, -3.8181, -191.102), }
+
+ARA_channel_positions = Idealized_ARA_positions
 
 # center of array
 coords = np.array(list(ARA_channel_positions.values()))
@@ -66,10 +67,10 @@ def plane_wave_travel_times_from_R(
 
 # ---- generate JSON ----
 def generate_beam_delay_json(
-    filename="Event_sources_for_CSW_2500.json",
+    filename="Event_sources_for_CSW_IDEAL_9600.json",
     R=100.0,
-    azimuths=np.linspace(0, 360, 50),
-    zeniths=np.linspace(0, 180, 50)
+    azimuths=np.linspace(0, 360, 120),
+    zeniths=np.linspace(0, 180, 80)
 ):
     data = {}
 

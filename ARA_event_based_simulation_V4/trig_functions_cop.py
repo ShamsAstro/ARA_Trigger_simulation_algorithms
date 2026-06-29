@@ -507,8 +507,8 @@ def ARA_CSW_trigger_FFT_optimized(
         raise ValueError("noise_rms must be a scalar float-like value.") from e
 
     mid = N // 2
-    #scan range to take 120ns
-    scan_lim = int(120/(t[1]-t[0])) #120 ns is the longest possible time shift between two channels
+
+    scan_lim = int(180/(t[1]-t[0])) #120 ns is the longest possible time shift between two channels
 
     # --- pick reference channel: largest absolute peak amplitude ---
     peak_vals = [np.max(x)-np.min(x) for x in X]
@@ -576,6 +576,69 @@ def ARA_CSW_trigger_FFT_optimized(
         "channels": fired_channels
     }]
 
+def ARA_CSW_trigger_FFT_return_max_power(
+    channel_signals,
+    time_axis,
+    *,
+    noise_rms,
+    N_segments=1
+):
+
+       # --- inputs -> arrays ---
+    t = np.asarray(time_axis, dtype=float)
+    X = [np.asarray(sig, dtype=float) for sig in channel_signals]
+    n_ch = len(X)
+    if n_ch == 0:
+        return []
+
+    N = X[0].size
+    if any(x.size != N for x in X) or t.size != N:
+        raise ValueError("All channels and time_axis must have the same length.")
+
+    # --- scalars ---
+
+    try:
+        sigma_n = float(noise_rms)
+    except Exception as e:
+        raise ValueError("noise_rms must be a scalar float-like value.") from e
+
+    mid = N // 2
+    #scan range to take 120ns
+    scan_lim = int(180/(t[1]-t[0])) #120 ns is the longest possible time shift between two channels
+
+    # --- pick reference channel: largest absolute peak amplitude ---
+    peak_vals = [np.max(x)-np.min(x) for x in X]
+    ref_idx = int(np.argmax(peak_vals))
+    ref = X[ref_idx]
+
+    # --- center the reference channel at mid using its |max| position ---
+    ref_kmax = int(np.argmax(np.abs(ref)))
+    ref_center_shift = mid - ref_kmax   
+    ref_centered = np.roll(ref, ref_center_shift)
+    shift_centers = []
+    
+    # --- for each channel, find the best roll (every 2 samples) vs centered reference ---
+    X_aligned, lags_samp, lags_sec, corr_pk = align_channels_fft_xcorr(
+        X, 
+        fs=None, 
+        ref_idx=ref_idx,          # pick your best SNR channel
+        max_lag_s=17.5e-8,           
+        sub_sample=True, 
+        fractional=True, 
+        edge_pad=64               # small pad helps avoid circular wrap
+    )
+    shift_centers = lags_samp.tolist()
+    #remove the 0 values from shift_centers
+    shift_centers = [int(shift) for shift in shift_centers if shift != 0]
+
+    csw, csw_power = coherent_sum(X_aligned)
+
+    #divide the csw power into 20 sections, and taking the mean of the sections
+    csw_power_sections = np.array_split(csw_power, N_segments)
+    peak_power = np.max([np.mean(section) for section in csw_power_sections])
+    return peak_power 
+
+
 def ARA_CSW_trigger(
     channel_signals,
     time_axis,
@@ -584,26 +647,6 @@ def ARA_CSW_trigger(
     noise_rms,
     STEP=3
 ):
-    """
-    EVENT-WIDE CSW (Coherent Sum Window) trigger with correlation-based alignment:
-      0) Choose reference channel = channel with highest absolute peak amplitude.
-      1) Center the reference by rolling so its |max| sample is at the middle index.
-      2) For each other channel, find the roll (tested every 2 samples) that maximizes
-         its correlation (dot product) with the centered reference, then apply that roll.
-         (Rolling is circular, i.e., samples shifted past one edge reappear on the other.)
-      3) Coherently sum aligned waveforms sample-by-sample.
-      4) Compute event CSW power: sum_t [ (sum_ch x_ch(t))^2 ] (we keep the trace too).
-      5) Compare to a single effective threshold, same convention as your code:
-             power_threshold = threshold * (noise_rms**2)
-         If max power in the trace exceeds this, report ONE trigger.
-
-    Returns
-    -------
-    triggers : list[dict]  (length 0 or 1)
-        Each: {"t_trigger": float, "channels": list[int]}
-        - t_trigger is the time at the center sample after alignment.
-        - channels are all channels (indices) used in CSW.
-    """
     # --- inputs -> arrays ---
     t = np.asarray(time_axis, dtype=float)
     X = [np.asarray(sig, dtype=float) for sig in channel_signals]
@@ -628,7 +671,7 @@ def ARA_CSW_trigger(
 
     mid = N // 2
     #scan range to take 169ns
-    scan_lim = int(169/(t[1]-t[0])) #169 ns is the longest possible time shift between two channels
+    scan_lim = int(180/(t[1]-t[0])) #180 ns is the longest possible time shift between two channels
 
     # --- pick reference channel: largest absolute peak amplitude ---
     peak_vals = [np.max(x)-np.min(x) for x in X]
